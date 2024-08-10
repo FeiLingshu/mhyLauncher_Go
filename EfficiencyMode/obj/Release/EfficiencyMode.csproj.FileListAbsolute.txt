@@ -1,0 +1,6 @@
+D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\bin\Release\EfficiencyMode.dll
+D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\bin\Release\EfficiencyMode.pdb
+D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\obj\Release\EfficiencyMode.csproj.AssemblyReference.cache
+D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\obj\Release\EfficiencyMode.csproj.CoreCompileInputs.cache
+D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\obj\Release\EfficiencyMode.dll
+D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\obj\Release\EfficiencyMode.pdb
