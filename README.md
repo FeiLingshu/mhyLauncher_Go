@@ -1,6 +1,6 @@
 # _该分支为派生自 [`mhyLauncher_Go`](https://github.com/FeiLingshu/mhyLauncher_Go/tree/mhyLauncher_Go) 的修改版本_
 ### _新添加了对效能模式的支持，具体信息请前往 [`EfficiencyMode`](https://github.com/FeiLingshu/mhyLauncher_Go/tree/EfficiencyMode) 页面进行查看_  
-### _具体下载使用等说明也存在与上述页面中_
+### _具体下载使用等说明也存在于上述页面中_
 <br></br>
 - [ ] _本分支的说明文档不作程序相关说明使用_
 - [ ] _关于相关修改信息，请点击上述链接前往前往基础分支进行查看_
