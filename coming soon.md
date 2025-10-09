@@ -422,7 +422,7 @@ public class ToolTip : Component, IExtenderProvider
 
 ---
 
-<a id="Support"">
+<a id="Support">
 
 ### __[&#25216;&#26415;&#25903;&#25345;&#32;&#46;&#46;&#46;](#Support)&#12288;[&#10548;&#65039;](#List)__
 
