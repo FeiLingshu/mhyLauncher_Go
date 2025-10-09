@@ -1,7 +1,9 @@
 <picture>
 <source srcset="./LOGO.svg"/>
-<img src="/resources/LOGO.svg"/>
+  
+![](../resources/LOGO.svg)
+
 </picture>
 
-![](/resources/LOGO.svg)
+![LOGO](https://github.com/user-attachments/assets/f5583f1b-bc6c-4d47-9b9d-feb79d691f40)
 
