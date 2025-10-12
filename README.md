@@ -1,6 +1,6 @@
-<a id="TITLE" href="#TITLE">
-
 <p class="tiny-text"></p>
+
+<a id="TITLE" href="#TITLE">
 
 <picture>
 <source srcset="https://raw.githubusercontent.com/FeiLingshu/mhyLauncher_Go/refs/heads/resources/LOGO.svg" type="image/svg+xml"/>
