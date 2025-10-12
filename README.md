@@ -1,6 +1,10 @@
 <a id="TITLE" href="#TITLE">
 
-![GitHub Raw](https://raw.githubusercontent.com/FeiLingshu/mhyLauncher_Go/refs/heads/resources/LOGO.svg)
+<picture>
+<source srcset="https://raw.githubusercontent.com/FeiLingshu/mhyLauncher_Go/refs/heads/resources/LOGO.svg" type="image/svg"/>
+
+<img src="https://img.shields.io/badge/https%3A%2F%2Fimg.shields.io%2Fbadge%2FMHYLAUNCHER__GO-V2-blue?style=for-the-badge&label=MHYLAUNCHER_GO" alt="MHYLAUNCHER_GO"/>
+</picture>
 
 - __[&#77;&#72;&#89;&#76;&#65;&#85;&#78;&#67;&#72;&#69;&#82;&#95;&#71;&#79;&#32;&#24050;&#26356;&#26032;&#33267;&#32;&#86;&#50;&#32;&#29256;&#26412;](#TITLE)__
 
