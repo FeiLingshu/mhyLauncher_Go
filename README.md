@@ -1,4 +1,4 @@
-<strong id="TITLE">　</strong>
+<p class="tiny-text" id="TITLE">　</p>
 
 <a href="#TITLE">
 <picture>
