@@ -1,16 +1,16 @@
-<a id="TITLE" href="#TITLE">
+<a id="TITLE">
+<p class="tiny-text"></p>
+</a>
 
-<br/>
-
+<a href="#TITLE">
 <picture>
 <source srcset="https://raw.githubusercontent.com/FeiLingshu/mhyLauncher_Go/refs/heads/resources/LOGO.svg" type="image/svg+xml"/>
 <source srcset="data:image/octet-stream;base64,UklGRqoDAABXRUJQVlA4TJ0DAAAv50EKAP+gqJEk5b/a1tmJ5Zkcswg1AYA0F/17EIUUcIPKflUQAEgC6AyPOpyu+ScboChMLll/Zy8DXNMre8nespfszYmzbLK37OWt0oVhXIFhGMYV/0/0MfhhGFcAlm1bbRui4m4jWR0CzH+aEa/wBClfiei/BLeNJEliJBDomD0iq3rqyKoX2L9OfOps4t9/vzGLX9nmam9LRTFghriTxfYqjhmxVnEn3ti4gcAQFDt21BypTrqRhE5tYM+lMnCiAUC3ZFK/fp8VPxYhQR0zJ5Zn3NGFUEe9tK8PVu/Ni0upgcd0SqUyHuzFFbbqkN2ao6DCJgjZIAdxJmfOiNPnyMcLdVWRu37wxplP+ZVVVemwEe14/PuWKVWN0iYrDvl9yVi1WjGMxMla6xuv+wvXHm9D2L6q6Yjzw65DdoCEfkDCCVJfxTRhIGK2Ynqq38ViHNpPOMRAxsqek2PgJE7exwWNRsXxSKDcghorJYIcPfLbKwKdZZC0FxNwznsSuN8Y9oYbDmGt1JxCkudHfHQg80kz4gXGnY0qbkEpMXYGHfbIsXe0OYuLPy99AYnKT82JSypYhFVJdoK7HfmiZQ0Uf14vkIh81vKw6E1UlWXfCo/O5g0p/oh4iciHUtVbKWnwegBeCGYOKxZkRf9IYXiJyEdx1G0HzQUkHL2ZA35TKsYHJCppcL9LqwISnsEHKt7ohsNvzArDT1fimNJSUQsYFofuvICRuH01XpELNdL37cI62OcgiA6B9ZmAMz4P6EHrGLqOE9YBPG6QIcGaN3YwFmZNFVttCexcwXNTIaKtShxL1wKhRw8kH8nadd9l3Wa/iHxgHRwlBfSDNGtgsZAP6OJEBdZ7S8FOLbjkJzQtFY8k8TaowOJV2h/JA96JOAuLBf21Gbm6LQo33cAtPHm9J/OcjNw336G9WBBqcSIzzojSTfx3I1f9M4qLxaAWJ/q8qE7WXSFR6x8SKJaCXJwYcoDOohelW8T1p4QUy1qHg//flAH8keIo6o7lb4gbiNiEBLTTJHYLrOeh5ESPeR668hg4lnjtMeE1FcN/HhoAYhbvhOehKenKcL6Q8SoI91WdJNxmE4BHPanvK4Wj3m/YeAfCDf5/q9AIqesdxqW/35CQWo1jxlmXzZtcEMU03hz1vpI3vBPeCodJH6ngLMQwXnS4CzjrslWbzQVV7NKOB0dRnnlhM8EvkMBIBcYRnnFO17z+zu+N//vvV0YDAA==" type="image/webp"/>
 <img src="https://img.shields.io/badge/https%3A%2F%2Fimg.shields.io%2Fbadge%2FMHYLAUNCHER__GO-V2-blue?style=for-the-badge&label=MHYLAUNCHER_GO" alt="MHYLAUNCHER_GO"/>
 </picture>
+</a>
 
 - __[&#77;&#72;&#89;&#76;&#65;&#85;&#78;&#67;&#72;&#69;&#82;&#95;&#71;&#79;&#32;&#24050;&#26356;&#26032;&#33267;&#32;&#86;&#50;&#32;&#29256;&#26412;](#TITLE)__
-
-</a>
 
 ![GitHub Badge](https://img.shields.io/badge/https%3A%2F%2Fimg.shields.io%2Fbadge%2FGitHub-FeiLingshu-blue?logo=github&label=GitHub)
 ![License Badge](https://img.shields.io/badge/https%3A%2F%2Fimg.shields.io%2Fbadge%2FLicense-BSD_3--Clause-default?logo=gitbook&label=License)
