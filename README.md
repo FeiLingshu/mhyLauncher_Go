@@ -1,6 +1,6 @@
 # __即将重置！！！__
 
-> ### __`MHYLAUNCHER_GO` 即将重置到 `V2` 版本，敬请期待 ...__
+> ### __`MHYLAUNCHER_GO` 即将重置到 [`V2`](https://github.com/FeiLingshu/mhyLauncher_Go/tree/MHYLAUNCHER_GO) 版本，敬请期待 ...__
 
 ---
 
