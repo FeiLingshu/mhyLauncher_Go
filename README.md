@@ -1,3 +1,11 @@
+# __即将重置！！！__
+
+> ### __`MHYLAUNCHER_GO` 即将重置到 [`V2`](https://github.com/FeiLingshu/mhyLauncher_Go/tree/MHYLAUNCHER_GO) 版本，敬请期待 ...__
+
+---
+
+<br></br>
+
 # _该分支为派生自 [`mhyLauncher_Go`](https://github.com/FeiLingshu/mhyLauncher_Go/tree/mhyLauncher_Go) 的修改版本_
 ### _新添加了对效能模式的支持，具体信息请前往 [`EfficiencyMode`](https://github.com/FeiLingshu/mhyLauncher_Go/tree/EfficiencyMode) 页面进行查看_  
 ### _具体下载使用等说明也存在于上述页面中_
