@@ -1,0 +1,397 @@
+﻿<Window x:Name="window"
+        x:Class="MHYLAUNCHER_GO.MainFrame.Hello"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MHYLAUNCHER_GO.MainFrame"
+        xmlns:media="clr-namespace:System.Windows.Media;assembly=PresentationFramework"
+        mc:Ignorable="d"
+        Width="400"
+        Height="200"
+        Title="MHYLAUNCHER_GO V2"
+        Background="#FF1E2025"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanMinimize"
+        ShowActivated="True"
+        ShowInTaskbar="True"
+        Icon="/Plugins/ICON.png"
+        Topmost="True">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      UseAeroCaptionButtons="False"
+                      NonClientFrameEdges="None"
+                      GlassFrameThickness="0,1,0,0"
+                      ResizeBorderThickness="0"
+                      CornerRadius="0">
+        </WindowChrome>
+    </WindowChrome.WindowChrome>
+    <Grid Background="#FF1E2025"
+          ClipToBounds="True">
+        <Image Source="/MainFrame/BG.png"
+               Stretch="UniformToFill"
+               Opacity="0.2"
+               Visibility="Collapsed"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               x:Name="BGIMAGE">
+        </Image>
+        <MediaElement Source="{x:Null}"
+                      Stretch="UniformToFill"
+                      LoadedBehavior="Manual"
+                      UnloadedBehavior="Close"
+                      Volume="0"
+                      Opacity="0.5"
+                      Visibility="Collapsed"
+                      RenderOptions.BitmapScalingMode="HighQuality"
+                      x:Name="BGVIDEO">
+        </MediaElement>
+        <!--#FFFE6952-->
+        <Border Width="24"
+                Height="24"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,10,10,0"
+                CornerRadius="5"
+                x:Name="CLOSE"
+                Canvas.ZIndex="2">
+            <Border.Background>
+                <SolidColorBrush x:Name="CLOSEBackground" Color="#FF1E2025"/>
+            </Border.Background>
+            <Border.Triggers>
+                <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard FillBehavior="HoldEnd">
+                            <ColorAnimation 
+                                Storyboard.TargetName="CLOSEBackground"
+                                Storyboard.TargetProperty="Color"
+                                To="#FFFE6952"
+                                Duration="0:0:0.1">
+                                <ColorAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseInOut"/>
+                                </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                            <DoubleAnimation
+                                Storyboard.TargetName="TIP"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.5"
+                                Duration="0:0:0.1">
+                                <DoubleAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <ObjectAnimationUsingKeyFrames
+                                Storyboard.TargetName="TIPSTD" 
+                                Storyboard.TargetProperty="Text">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="退出程序"/>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard FillBehavior="HoldEnd">
+                            <ColorAnimation 
+                                Storyboard.TargetName="CLOSEBackground"
+                                Storyboard.TargetProperty="Color"
+                                To="#FF1E2025"
+                                Duration="0:0:0.1">
+                                <ColorAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseInOut"/>
+                                </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                            <DoubleAnimation
+                                Storyboard.TargetName="TIP"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0"
+                                Duration="0:0:0.1">
+                                <DoubleAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <ObjectAnimationUsingKeyFrames
+                                Storyboard.TargetName="TIPSTD" 
+                                Storyboard.TargetProperty="Text">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value=""/>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Border.Triggers>
+            <Image Source="/MainFrame/CLOSE.png"
+                   Margin="4"
+                   x:Name="CLOSEIMAGE"/>
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10"
+                                  Color="#FF000000"
+                                  Direction="90"
+                                  Opacity="0.8"
+                                  ShadowDepth="0"/>
+            </Border.Effect>
+        </Border>
+        <!--#FF4BD37B-->
+        <Border Width="24"
+                Height="24"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,10,39,0"
+                CornerRadius="5"
+                x:Name="RUN"
+                Canvas.ZIndex="2">
+            <Border.Background>
+                <SolidColorBrush x:Name="RUNBackground" Color="#FF1E2025"/>
+            </Border.Background>
+            <Border.Triggers>
+                <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard FillBehavior="HoldEnd">
+                            <ColorAnimation 
+                                Storyboard.TargetName="RUNBackground"
+                                Storyboard.TargetProperty="Color"
+                                To="#FF4BD37B"
+                                Duration="0:0:0.1">
+                                <ColorAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseInOut"/>
+                                </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                            <DoubleAnimation
+                                Storyboard.TargetName="TIP"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.5"
+                                Duration="0:0:0.1">
+                                <DoubleAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <ObjectAnimationUsingKeyFrames
+                                Storyboard.TargetName="TIPSTD" 
+                                Storyboard.TargetProperty="Text">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="启动程序"/>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard FillBehavior="HoldEnd">
+                            <ColorAnimation 
+                                Storyboard.TargetName="RUNBackground"
+                                Storyboard.TargetProperty="Color"
+                                To="#FF1E2025"
+                                Duration="0:0:0.1">
+                                <ColorAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseInOut"/>
+                                </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                            <DoubleAnimation
+                                Storyboard.TargetName="TIP"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0"
+                                Duration="0:0:0.1">
+                                <DoubleAnimation.EasingFunction>
+                                    <SineEase EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <ObjectAnimationUsingKeyFrames
+                                Storyboard.TargetName="TIPSTD" 
+                                Storyboard.TargetProperty="Text">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value=""/>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Border.Triggers>
+            <Image Source="/MainFrame/RUN.png"
+                   Margin="4"
+                   x:Name="RUNIMAGE"/>
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10"
+                                  Color="#FF000000"
+                                  Direction="90"
+                                  Opacity="0.8"
+                                  ShadowDepth="0"/>
+            </Border.Effect>
+        </Border>
+        <Grid Width="auto"
+              Height="auto"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Margin="0,39,10,0"
+              Background="#00000000"
+              Opacity="0"
+              x:Name="TIP"
+              Canvas.ZIndex="2">
+            <Border CornerRadius="5"
+                    Background="#FF1E2025">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10"
+                                      Color="#FF000000"
+                                      Direction="90"
+                                      Opacity="0.8"
+                                      ShadowDepth="0"/>
+                </Border.Effect>
+            </Border>
+            <Border CornerRadius="5"
+                    Background="#FF1E2025">
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="10,5,10,5"
+                           Background="#00000000"
+                           Foreground="#FFE5E5E5"
+                           FontFamily="pack://application:,,,/MainFrame/CascadiaMono.ttf#Cascadia Mono, Microsoft YaHei"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           TextAlignment="Right"
+                           Text=""
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           x:Name="TIPSTD"/>
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10"
+                                      Color="#FF000000"
+                                      Direction="90"
+                                      Opacity="0.8"
+                                      ShadowDepth="0"/>
+                </Border.Effect>
+            </Border>
+        </Grid>
+        <Border Height="24"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Margin="10,10,68,0"
+                CornerRadius="5"
+                Background="#FF1E2025"
+                x:Name="TITLE"
+                Canvas.ZIndex="2">
+            <Grid>
+                <Border Width="30"
+                        Height="15"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Margin="5,0,0,0"
+                        CornerRadius="3"
+                        Background="#FF303136">
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Background="#00000000"
+                               Foreground="#FF8D8E90"
+                               FontFamily="pack://application:,,,/MainFrame/CascadiaMono.ttf#Cascadia Mono, Microsoft YaHei"
+                               FontSize="14"
+                               FontWeight="Bold"
+                               TextAlignment="Center"
+                               Text="V2"
+                               SnapsToDevicePixels="True"
+                               UseLayoutRounding="True"/>
+                </Border>
+                <TextBlock HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center"
+                           Margin="40,0,10,0"
+                           Background="#00000000"
+                           Foreground="#FFE5E5E5"
+                           FontFamily="pack://application:,,,/MainFrame/CascadiaMono.ttf#Cascadia Mono, Microsoft YaHei"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           TextAlignment="Left"
+                           Text=""
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           x:Name="TITLETEXT">
+                </TextBlock>
+            </Grid>
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10"
+                                  Color="#FF000000"
+                                  Direction="90"
+                                  Opacity="0.8"
+                                  ShadowDepth="0"/>
+            </Border.Effect>
+        </Border>
+        <Grid Width="64"
+              Height="64"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Bottom"
+              Margin="0,0,10,20"
+              Opacity="0.8"
+              Canvas.ZIndex="1">
+            <Grid>
+                <Image Width="64"
+                       Height="64"
+                       Source="/Plugins/ICON.png"
+                       Stretch="UniformToFill"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       x:Name="test">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="10"
+                                          Color="#FF000000"
+                                          Direction="90"
+                                          Opacity="0.5"
+                                          ShadowDepth="0"/>
+                    </Image.Effect>
+                </Image>
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="10"
+                          Color="#FF000000"
+                          Direction="90"
+                          Opacity="0.5"
+                          ShadowDepth="0"/>
+                </Grid.Effect>
+            </Grid>
+        </Grid>
+        <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Margin="10,44,84,15"
+              Background="#00000000"
+              ClipToBounds="True"
+              x:Name="LOGPOOL"
+              Canvas.ZIndex="1">
+            <Grid.OpacityMask>
+                <ImageBrush Stretch="UniformToFill" ImageSource="/MainFrame/mask.png"/>
+            </Grid.OpacityMask>
+            <TextBlock HorizontalAlignment="Stretch"
+                       VerticalAlignment="Bottom"
+                       FontFamily="pack://application:,,,/MainFrame/CascadiaMono.ttf#Cascadia Mono, Microsoft YaHei"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       TextAlignment="Left"
+                       LineHeight="20"
+                       LineStackingStrategy="BlockLineHeight"
+                       SnapsToDevicePixels="True"
+                       UseLayoutRounding="True"
+                       Margin="3,0,0,0"
+                       x:Name="LOG">
+                <!--<LineBreak/>
+                <Run Text="MHYLAUNCHER_GO" Foreground="#FF8D8E90"/>-->
+                <TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="10"
+                                      Color="#FF000000"
+                                      Direction="90"
+                                      Opacity="1"
+                                      ShadowDepth="0"/>
+                </TextBlock.Effect>
+            </TextBlock>
+        </Grid>
+        <Grid Height="5"
+              VerticalAlignment="Bottom"
+              Background="#FF1E2025"
+              Canvas.ZIndex="2">
+            <Grid Width="{Binding ActualWidth, ElementName=window, Mode=OneWay}"
+                  HorizontalAlignment="Left"
+                  Background="#FF4BD37B"
+                  RenderTransformOrigin="0,0.5"
+                  x:Name="PBAR">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="STEP" ScaleX="0"/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+            </Grid>
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="15"
+                                  Color="#FFFFFFFF"
+                                  Direction="270"
+                                  Opacity="1"
+                                  ShadowDepth="2"/>
+            </Grid.Effect>
+        </Grid>
+    </Grid>
+</Window>
