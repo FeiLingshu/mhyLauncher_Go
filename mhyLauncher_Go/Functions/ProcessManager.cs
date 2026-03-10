@@ -542,46 +542,63 @@ namespace MHYLAUNCHER_GO.Functions
         /// <exception cref="Win32Exception">发生win32错误</exception>
         private int Win32CallBack(int nCode, int wParam, IntPtr lParam)
         {
-            KeyBoardHookStruct keyBoardHookStruct = new KeyBoardHookStruct();
             try
             {
-                keyBoardHookStruct = (KeyBoardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyBoardHookStruct));
-            }
-            catch (Exception) { }
-            finally
-            {
-                if (keyBoardHookStruct == null)
+                KeyBoardHookStruct keyBoardHookStruct = new KeyBoardHookStruct();
+                try
                 {
-                    throw new Win32Exception(Marshal.GetLastWin32Error(),
-                        $"LocalLowHook捕获发生异常。");
+                    keyBoardHookStruct = (KeyBoardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyBoardHookStruct));
                 }
-            }
-            if (wParam == WM_KEYUP)
-            {
-                if (keyBoardHookStruct.vkCode == VK_F12)
+                catch (Exception) { }
+                finally
                 {
-                    if (AppBase.TraceReady && HYP != null)
+                    if (keyBoardHookStruct == null)
                     {
-                        IntPtr hyph = HYP.MainWindowHandle;
-                        IntPtr hwnd = GetForegroundWindow();
-                        if (hyph != IntPtr.Zero && hwnd == hyph)
+                        Thread t = new Thread(() =>
                         {
-                            TraceExtensions.Set(AppBase);
-                        }
+                            throw new Win32Exception(Marshal.GetLastWin32Error(),
+                                $"LocalLowHook捕获发生异常。");
+                        })
+                        { IsBackground = true };
+                        t.Start();
                     }
-                    for (int i = 0; i < hds.Length; i++)
+                }
+                if (wParam == WM_KEYUP)
+                {
+                    if (keyBoardHookStruct.vkCode == VK_F12)
                     {
-                        HookData hd = Read(i);
-                        if (hd.state)
+                        if (AppBase.TraceReady && HYP != null)
                         {
+                            IntPtr hyph = HYP.MainWindowHandle;
                             IntPtr hwnd = GetForegroundWindow();
-                            if (hwnd == hd.hwnd)
+                            if (hyph != IntPtr.Zero && hwnd == hyph)
                             {
-                                hd._void[0](hwnd);
+                                TraceExtensions.Set(AppBase);
+                            }
+                        }
+                        for (int i = 0; i < hds.Length; i++)
+                        {
+                            HookData hd = Read(i);
+                            if (hd.state)
+                            {
+                                IntPtr hwnd = GetForegroundWindow();
+                                if (hwnd == hd.hwnd)
+                                {
+                                    hd._void[0](hwnd);
+                                }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception exp)
+            {
+                Thread t = new Thread(() =>
+                {
+                    throw exp;
+                })
+                { IsBackground = true };
+                t.Start();
             }
             return CallNextHookEx((int)KeyHook, nCode, wParam, lParam);
         }
@@ -606,20 +623,24 @@ namespace MHYLAUNCHER_GO.Functions
             IntPtr hwnd, int idObject, int idChild,
             uint dwEventThread, uint dwmsEventTime)
         {
-            if (idObject == OBJID_WINDOW && idChild == CHILDID_SELF && hwnd != IntPtr.Zero)
+            try
             {
-                for (int i = 0; i < hds.Length; i++)
+                if (idObject == OBJID_WINDOW && idChild == CHILDID_SELF && hwnd != IntPtr.Zero)
                 {
-                    HookData hd = Read(i);
-                    if (hd.state)
+                    for (int i = 0; i < hds.Length; i++)
                     {
-                        if (hwnd == hd.hwnd)
+                        HookData hd = Read(i);
+                        if (hd.state)
                         {
-                            hd._void[1](hwnd);
+                            if (hwnd == hd.hwnd)
+                            {
+                                hd._void[1](hwnd);
+                            }
                         }
                     }
                 }
             }
+            catch (Exception) { }
         }
 
 
@@ -643,20 +664,24 @@ namespace MHYLAUNCHER_GO.Functions
             IntPtr hwnd, int idObject, int idChild,
             uint dwEventThread, uint dwmsEventTime)
         {
-            if (idObject == OBJID_WINDOW && idChild == CHILDID_SELF && hwnd != IntPtr.Zero)
+            try
             {
-                for (int i = 0; i < hds.Length; i++)
+                if (idObject == OBJID_WINDOW && idChild == CHILDID_SELF && hwnd != IntPtr.Zero)
                 {
-                    HookData hd = Read(i);
-                    if (hd.state)
+                    for (int i = 0; i < hds.Length; i++)
                     {
-                        if (hwnd == hd.hwnd)
+                        HookData hd = Read(i);
+                        if (hd.state)
                         {
-                            hd._void[2](hwnd);
+                            if (hwnd == hd.hwnd)
+                            {
+                                hd._void[2](hwnd);
+                            }
                         }
                     }
                 }
             }
+            catch (Exception) { }
         }
 
         /// <summary>
