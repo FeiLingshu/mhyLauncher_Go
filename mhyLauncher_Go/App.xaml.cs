@@ -211,8 +211,15 @@ namespace MHYLAUNCHER_GO
                 && PE.EndsWith("miHoYo Launcher");
             if (!checkout)
             {
-                throw new ArithmeticException(
-                    "程序所在目录不正确。\n备注：请将程序置于米哈游启动器(miHoYo Launcher\\launcher.exe)相同目录下。");
+                if (Debugger.IsAttached)
+                {
+                    PE = Environment.CurrentDirectory;
+                }
+                else
+                {
+                    throw new ArithmeticException(
+                        "程序所在目录不正确。\n备注：请将程序置于米哈游启动器(miHoYo Launcher\\launcher.exe)相同目录下。");
+                }
             }
             // 挂载性能配置DLL
             string PATH_DLL = $"{PE}\\EfficiencyMode.dll";
@@ -642,14 +649,23 @@ namespace MHYLAUNCHER_GO
                                 if (std.StartsWith(std_1)
                                     || std.StartsWith(std_2))
                                 {
-                                    StringBuilder sb = new StringBuilder(260);
-                                    uint l = GetModuleFileNameEx(game.Handle.ToInt32(), IntPtr.Zero, sb, (uint)sb.Capacity);
-                                    if (l >= sb.Capacity)
+                                    std = "UNKNOWN";
+                                    IntPtr phandle = OpenProcess(
+                                        ProcessAccessFlags.PROCESS_QUERY_INFORMATION | ProcessAccessFlags.PROCESS_VM_READ,
+                                        false, game.Id);
+                                    if (phandle != IntPtr.Zero)
                                     {
-                                        sb.Capacity = (int)l + 1;
-                                        GetModuleFileNameEx(game.Handle.ToInt32(), IntPtr.Zero, sb, (uint)sb.Capacity);
+                                        StringBuilder path = new StringBuilder(32768);
+                                        uint scount = (uint)path.Capacity;
+                                        QueryFullProcessImageName(phandle, 0, path, ref scount);
+                                        string p = path.ToString().Trim();
+                                        path.Clear();
+                                        if (!string.IsNullOrEmpty(p))
+                                        {
+                                            std = p;
+                                        }
+                                        CloseHandle(phandle);
                                     }
-                                    std = Path.GetFileNameWithoutExtension(sb.ToString().Trim());
                                 }
                                 else
                                 {
