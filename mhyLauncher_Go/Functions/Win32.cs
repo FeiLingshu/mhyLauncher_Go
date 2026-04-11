@@ -323,8 +323,24 @@ namespace MHYLAUNCHER_GO.Functions
         /// <param name="lpFilename">承载路径信息的StringBuilder实例</param>
         /// <param name="nSize">StringBuilder实例的缓冲区大小</param>
         /// <returns>返回复制到缓冲区的字符串的长度</returns>
+        [Obsolete("特殊情况下函数可能返回错误的数据，目前已使用QueryFullProcessImageName替换", false)]
         [DllImport("Psapi.dll", EntryPoint = "GetModuleFileNameEx", SetLastError = true)]
         public static extern uint GetModuleFileNameEx(int hProcess, IntPtr hModule, [Out] StringBuilder lpFilename, uint nSize);
+
+        /// <summary>
+        /// 实现通过进程句柄获取应用程序或模块的路径的WindowsAPI
+        /// </summary>
+        /// <param name="hProcess">目标进程句柄</param>
+        /// <param name="dwFlags">查询标志位</param>
+        /// <param name="lpExeName">承载路径信息的StringBuilder实例</param>
+        /// <param name="lpdwSize">StringBuilder实例的缓冲区大小</param>
+        /// <returns>返回操作是否成功</returns>
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool QueryFullProcessImageName(
+                IntPtr hProcess,
+                uint dwFlags,
+                StringBuilder lpExeName,
+                ref uint lpdwSize);
 
         /// <summary>
         /// 用于将输入线程附加到其他线程中

@@ -106,7 +106,6 @@ namespace MHYLAUNCHER_GO.Functions
                 AutoResetEvent timer = new AutoResetEvent(false);
                 Process[] games = new Process[infos.paths.Length];
                 Task<int>[] ts = new Task<int>[games.Length];
-                uint length = 0;
                 do // 监视游戏进程的启动操作
                 {
                     if (games.Contains(null))
@@ -135,13 +134,23 @@ namespace MHYLAUNCHER_GO.Functions
                                         if (process != null && !process.HasExited)
                                         {
                                             // 由于游戏进程受到保护，process.MainModule.FileName会产生拒绝访问的win32异常
-                                            StringBuilder sb = new StringBuilder(infos.paths[i_path].Length + 1);
-                                            length = GetModuleFileNameEx(process.Handle.ToInt32(), IntPtr.Zero, sb, (uint)sb.Capacity);
-                                            if (length == infos.paths[i_path].Length && sb.ToString() == infos.paths[i_path])
+                                            IntPtr phandle = OpenProcess(
+                                                ProcessAccessFlags.PROCESS_QUERY_INFORMATION | ProcessAccessFlags.PROCESS_VM_READ,
+                                                false, pid);
+                                            if (phandle != IntPtr.Zero)
                                             {
-                                                games[i_path] = Process.GetProcessById(pid);
-                                                sb.Clear();
-                                                break;
+                                                StringBuilder path = new StringBuilder(32768);
+                                                uint scount = (uint)path.Capacity;
+                                                QueryFullProcessImageName(phandle, 0, path, ref scount);
+                                                string p = path.ToString().Trim();
+                                                path.Clear();
+                                                if (!string.IsNullOrEmpty(p) && p.Length == infos.paths[i_path].Length && p == infos.paths[i_path])
+                                                {
+                                                    games[i_path] = Process.GetProcessById(pid);
+                                                    CloseHandle(phandle);
+                                                    break;
+                                                }
+                                                CloseHandle(phandle);
                                             }
                                         }
                                     }
@@ -236,14 +245,24 @@ namespace MHYLAUNCHER_GO.Functions
                                                     }
                                                     if (ppid == 0 || ppid != HYP.Id)
                                                     {
-                                                        StringBuilder sb = new StringBuilder(260);
-                                                        uint l = GetModuleFileNameEx(games[index].Handle.ToInt32(), IntPtr.Zero, sb, (uint)sb.Capacity);
-                                                        if (l >= sb.Capacity)
+                                                        string pathtitle = "UNKNOWN";
+                                                        IntPtr phandle = OpenProcess(
+                                                            ProcessAccessFlags.PROCESS_QUERY_INFORMATION | ProcessAccessFlags.PROCESS_VM_READ,
+                                                            false, games[index].Id);
+                                                        if (phandle != IntPtr.Zero)
                                                         {
-                                                            sb.Capacity = (int)l + 1;
-                                                            GetModuleFileNameEx(games[index].Handle.ToInt32(), IntPtr.Zero, sb, (uint)sb.Capacity);
+                                                            StringBuilder path = new StringBuilder(32768);
+                                                            uint scount = (uint)path.Capacity;
+                                                            QueryFullProcessImageName(phandle, 0, path, ref scount);
+                                                            string p = path.ToString().Trim();
+                                                            path.Clear();
+                                                            if (!string.IsNullOrEmpty(p))
+                                                            {
+                                                                pathtitle = p;
+                                                            }
+                                                            CloseHandle(phandle);
                                                         }
-                                                        string std = $"{Path.GetDirectoryName(sb.ToString().Trim())}" +
+                                                        string std = $"{Path.GetDirectoryName(pathtitle)}" +
                                                             $"\\0x{"MHYLAUNCHER_GO".GetHashCode():X8}.MHYLG";
                                                         if (File.Exists(std))
                                                         {
