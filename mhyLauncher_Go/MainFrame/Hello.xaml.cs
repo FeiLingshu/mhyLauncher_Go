@@ -27,7 +27,7 @@ namespace MHYLAUNCHER_GO.MainFrame
         /// <summary>
         /// 用于版本标识的内部字段
         /// </summary>
-        private readonly string version = "https://github.com/FeiLingshu/mhyLauncher_Go/releases/tag/V2-Fix-2";
+        private readonly string version = "https://github.com/FeiLingshu/mhyLauncher_Go/releases/tag/V2-Fix-3";
 
         /// <summary>
         /// 用于检查版本更新的http地址
@@ -178,7 +178,7 @@ namespace MHYLAUNCHER_GO.MainFrame
                                 break;
                             }
                         }
-                    } while (Thread.CurrentThread.IsAlive);
+                    } while (true);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         if (result.HasValue)
@@ -199,6 +199,8 @@ namespace MHYLAUNCHER_GO.MainFrame
                                         TITLETEXT.Text = $"开发者版本 ...";
                                     }
                                     break;
+                                case "57DB5563-758E-45D8-A290-3A48BDB2A263":
+                                    throw new NotSupportedException($"识别到开发者发布的终止指令，程序已停用。");
                                 default:
                                     if (version == result.Value.data)
                                     {
@@ -238,7 +240,7 @@ namespace MHYLAUNCHER_GO.MainFrame
                                         };
                                         hyperlink.RequestNavigate += (ss, ee) =>
                                         {
-                                            Process.Start(ee.Uri.AbsoluteUri);
+                                            using (Process.Start(ee.Uri.AbsoluteUri)) { }
                                         };
                                         TITLETEXT.Inlines.Add(hyperlink);
                                         TITLETEXT.Inlines.Add(new Run(")"));

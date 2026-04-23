@@ -58,7 +58,7 @@
             this.copyright.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.copyright.Size = new System.Drawing.Size(304, 25);
             this.copyright.TabIndex = 0;
-            this.copyright.Text = "Copyright (c) 2024, FeiLingshu";
+            this.copyright.Text = "Copyright (c) 2026, FeiLingshu";
             this.copyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Notify

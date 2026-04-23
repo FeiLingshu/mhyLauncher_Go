@@ -83,7 +83,7 @@ namespace MHYLAUNCHER_GO.Plugins
                         AutoResetEvent timer = new AutoResetEvent(false);
                         do
                         {
-                            timer.WaitOne(100);
+                            timer.WaitOne(100, false);
                             isHidden = !IsWindowVisible(HYPHWND);
                         } while (isHidden);
                     }
@@ -270,7 +270,7 @@ namespace MHYLAUNCHER_GO.Plugins
                     AutoResetEvent timer = new AutoResetEvent(false);
                     do
                     {
-                        timer.WaitOne(100);
+                        timer.WaitOne(100, false);
                         isHidden = !IsWindowVisible(HYP);
                     } while (isHidden);
                 }
@@ -641,7 +641,7 @@ namespace MHYLAUNCHER_GO.Plugins
                                     AutoResetEvent timer = new AutoResetEvent(false);
                                     do
                                     {
-                                        timer.WaitOne(100);
+                                        timer.WaitOne(100, false);
                                         hidden = !IsWindowVisible(HYP);
                                     } while (hidden);
                                 }

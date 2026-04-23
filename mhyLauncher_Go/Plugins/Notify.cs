@@ -129,7 +129,7 @@ namespace MHYLAUNCHER_GO.Plugins
                     }
                     else
                     {
-                        timer.WaitOne(TimeSpan.FromMilliseconds(1000 / 60D));
+                        timer.WaitOne(TimeSpan.FromMilliseconds(1000 / 60D), false);
                     }
                 } while (!token_1.IsCancellationRequested);
             }).ContinueWith(t =>
@@ -242,7 +242,7 @@ namespace MHYLAUNCHER_GO.Plugins
                         }
                         else
                         {
-                            timer.WaitOne(TimeSpan.FromMilliseconds(1000 / 60D));
+                            timer.WaitOne(TimeSpan.FromMilliseconds(1000 / 60D), false);
                         }
                     } while (!token_2.IsCancellationRequested);
                 }).ContinueWith(t =>

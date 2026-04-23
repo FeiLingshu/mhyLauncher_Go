@@ -185,6 +185,7 @@ namespace MHYLAUNCHER_GO.Functions
                                     int RunFunc()
                                     {
                                         int timeout = 0;
+                                        IntPtr hwnd = IntPtr.Zero;
                                         do
                                         {
                                             if (games[index].HasExited || timeout == 50)
@@ -198,10 +199,15 @@ namespace MHYLAUNCHER_GO.Functions
                                                 games[index] = null;
                                                 return taskresult;
                                             }
-                                            timer.WaitOne(100);
+                                            timer.WaitOne(100, false);
                                             timeout++;
-                                        } while (games[index].MainWindowHandle == IntPtr.Zero);
-                                        timer.WaitOne(1000); // 为了防止游戏窗口已初始化但未呈现 OR 呈现后极短时间内被销毁，以下为冗余代码
+                                            try
+                                            {
+                                                hwnd = games[index].MainWindowHandle;
+                                            }
+                                            catch (Exception) { }
+                                        } while (hwnd == IntPtr.Zero);
+                                        timer.WaitOne(1000, false); // 为了防止游戏窗口已初始化但未呈现 OR 呈现后极短时间内被销毁，以下为冗余代码
                                         if (games[index].HasExited || games[index].MainWindowHandle == IntPtr.Zero)
                                         {
                                             int taskresult = 0;
@@ -412,7 +418,7 @@ namespace MHYLAUNCHER_GO.Functions
                                 std_exp.ToArray()));
                         }
                     }
-                    timer.WaitOne(TimeSpan.FromSeconds(1));
+                    timer.WaitOne(TimeSpan.FromSeconds(1), false);
                 } while (ProcessManagerloop.IsAlive);
             })
             { IsBackground = true };
