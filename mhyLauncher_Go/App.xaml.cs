@@ -345,36 +345,36 @@ namespace MHYLAUNCHER_GO
                 // 准备动画参数
                 TimeSpan time = TimeSpan.Zero;
                 TimeSpan wait = TimeSpan.FromMilliseconds(500);
-                hello.StepSignal.WaitOne(wait);
+                hello.StepSignal.WaitOne(wait, false);
                 // 获取更新(异步)
                 hello.Log("获取更新(异步)");
                 time = TimeSpan.FromMilliseconds(500);
                 hello.PreStep(0.2, time);
-                hello.StepSignal.WaitOne(time.Add(wait));
+                hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 加载必要资源
                 hello.Log("加载必要资源");
                 time = TimeSpan.FromMilliseconds(1000);
                 hello.PreStep(0.4, time);
                 BugFix.Initialize();
-                hello.StepSignal.WaitOne(time.Add(wait));
+                hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 识别运行环境
                 hello.Log("识别运行环境");
                 time = TimeSpan.FromMilliseconds(2000);
                 hello.PreStep(0.6, time);
                 Load.CoreType = Load.GetCoreMap();
-                hello.StepSignal.WaitOne(time.Add(wait));
+                hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 读取用户配置文件
                 hello.Log("挂载用户配置文件");
                 time = TimeSpan.FromMilliseconds(1000);
                 hello.PreStep(0.8, time);
                 binstate = BIN.Check() && BIN.GetPaths();
-                hello.StepSignal.WaitOne(time.Add(wait));
+                hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 识别启动器进程
                 hello.Log("预读游戏启动器进程");
                 time = TimeSpan.FromMilliseconds(500);
                 hello.PreStep(1.0, time);
                 process = mhyLauncher();
-                hello.StepSignal.WaitOne(time.Add(wait));
+                hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 等待用户输入
                 hello.Log("程序加载完毕");
             });
@@ -397,28 +397,34 @@ namespace MHYLAUNCHER_GO
                 }
             }
             // 运行应用程序主功能方法
+            using (Process HYP = Process.Start($"{PE}\\launcher.exe"))
+            {
+                HYP.WaitForExit();
+            }
             if (process == null) // 配置米哈游启动器
             {
-                process = Process.Start($"{PE}\\launcher.exe");
-                process.WaitForExit();
                 do
                 {
                     process = mhyLauncher();
                     if (process != null) break;
-                    timer.WaitOne(100);
+                    timer.WaitOne(100, false);
                 } while (process == null);
             }
-            else
-            {
-                using (Process HYP = Process.Start($"{Environment.CurrentDirectory}\\launcher.exe"))
-                {
-                    HYP.WaitForExit();
-                }
-            }
+            int startcount = 0;
             do
             {
-                timer.WaitOne(100);
-            } while (process.MainWindowHandle == IntPtr.Zero || !IsWindowVisible(process.MainWindowHandle));
+                timer.WaitOne(100, false);
+                startcount++;
+                if (process.MainWindowHandle != IntPtr.Zero && IsWindowVisible(process.MainWindowHandle))
+                {
+                    break;
+                }
+                startcount++;
+                if (startcount >= 100)
+                {
+                    throw new InvalidOperationException("无法捕获米哈游启动器窗口。");
+                }
+            } while (true);
             if (Load.CoreType) // 额外配置：用于修正性能配置
             {
                 _ = Load.SetProcess_Pro(process, ProcessPriorityClass.Normal, true);
