@@ -30,6 +30,8 @@ namespace MHYLAUNCHER_GO.Plugins
             #pragma warning restore CS0618 // 类型或成员已过时
             #endregion
             this.parent = parent;
+            this.Layout += Loading_Layout;
+            this.Load += Loading_Load;
             this.Shown += Loading_Shown;
             this.Paint += Loading_Paint;
             this.MouseDown += Loading_MouseDown;
@@ -75,26 +77,52 @@ namespace MHYLAUNCHER_GO.Plugins
             base.WndProc(ref m);
         }
 
+        private void Loading_Layout(object sender, LayoutEventArgs e)
+        {
+            if (this.Width == 235)
+            {
+                this.Height = 27;
+            }
+            else
+            {
+                double ratio = 27D / 235D;
+                this.Height = (int)Math.Round(this.Width * ratio, MidpointRounding.AwayFromZero);
+            }
+        }
+
+        /// <summary>
+        /// 强制刷新窗口（由于窗口嵌入其他应用程序窗口后，无法响应普通重绘指令，故出此下策）
+        /// </summary>
+        private void Reflash()
+        {
+            this.Height++; this.Height--;
+        }
+
         /// <summary>
         /// 用于存储窗口裁剪区域的内部字段
         /// </summary>
         private GraphicsPath CLIP = null;
 
         /// <summary>
-        /// 重写窗口句柄创建过程，动态设置窗口裁剪范围
+        /// 用于存储窗口实际渲染大小的内部字段
         /// </summary>
-        /// <param name="e">窗口过程传递的默认参数</param>
-        protected override void OnHandleCreated(EventArgs e)
+        private Size SIZE = Size.Empty;
+
+        /// <summary>
+        /// 动态获取窗口裁剪范围
+        /// </summary>
+        /// <param name="e">窗口实际大小</param>
+        private void GetClip()
         {
-            base.OnHandleCreated(e);
+            SIZE = this.Size;
             int curveradius = 8;
             float offset = 0.5F;
             CLIP = new GraphicsPath();
             CLIP.AddLines(new PointF[5] {
                 new PointF(curveradius - 1, 0 + offset),
-                new PointF(235, 0 + offset),
-                new PointF(235, 27),
-                new PointF(0 + offset, 27),
+                new PointF(SIZE.Width, 0 + offset),
+                new PointF(SIZE.Width, SIZE.Height),
+                new PointF(0 + offset, SIZE.Height),
                 new PointF(0 + offset, curveradius - 1) });
             CLIP.AddArc(new RectangleF(0 + offset, 0 + offset, curveradius * 2 - 1, curveradius * 2 - 1), 180F, 90F);
         }
@@ -155,9 +183,9 @@ namespace MHYLAUNCHER_GO.Plugins
                         point -= this.Size;
                         int horizontal = GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXEDGE) - GetSystemMetrics(SM_CXBORDER);
                         int vertical = GetSystemMetrics(SM_CYFRAME) + GetSystemMetrics(SM_CYEDGE) - GetSystemMetrics(SM_CYBORDER);
-                        notify = new Notify(this.Width + horizontal * 2 - 5, 100)
+                        notify = new Notify(this.Width + horizontal * 2 - 5)
                         {
-                            Location = new Point(point.X - horizontal, point.Y - 100 + horizontal - 5)
+                            Location = new Point(point.X - horizontal, point.Y + horizontal - 5)
                         };
                         notify.FormClosed += (e1, e2) =>
                         {
@@ -190,6 +218,17 @@ namespace MHYLAUNCHER_GO.Plugins
         /// 启动器进程实例
         /// </summary>
         private readonly Process parent = null;
+
+        /// <summary>
+        /// 窗口加载时触发
+        /// </summary>
+        /// <param name="sender">事件来源</param>
+        /// <param name="e">事件参数</param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void Loading_Load(object sender, EventArgs e)
+        {
+            GetClip();
+        }
 
         /// <summary>
         /// 窗口框架初始化完成后触发
@@ -240,8 +279,9 @@ namespace MHYLAUNCHER_GO.Plugins
             }
             SetParent(this.Handle, parent.MainWindowHandle);
             int offset = 0;
-            this.Location = new Point(parentsize.Width - 235, parentsize.Height - 27 + offset);
-            this.Size = new Size(235, 27);
+            this.Location = new Point(parentsize.Width - SIZE.Width, parentsize.Height - SIZE.Height + offset);
+            this.Size = new Size(SIZE.Width, SIZE.Height);
+            this.Reflash();
             Thread waitforexit = new Thread(() =>
             {
                 parent.WaitForExit();
@@ -269,13 +309,13 @@ namespace MHYLAUNCHER_GO.Plugins
             int curveradius = 8;
             float offset = 0.5F;
             GraphicsPath _path = new GraphicsPath();
-            _path.AddLine(new PointF(1 + offset, 27), new PointF(1 + offset, curveradius - 1 + offset));
+            _path.AddLine(new PointF(1 + offset, SIZE.Height), new PointF(1 + offset, curveradius - 1 + offset));
             _path.AddArc(new RectangleF(1 + offset, 1 + offset, curveradius * 2 - 1, curveradius * 2 - 1), 180F, 90F);
-            _path.AddLine(new PointF(curveradius - 1 + offset, 1 + offset), new PointF(235, 1 + offset));
+            _path.AddLine(new PointF(curveradius - 1 + offset, 1 + offset), new PointF(SIZE.Width, 1 + offset));
             _path.AddLines(new Point[3] {
-                new Point(235, 0),
+                new Point(SIZE.Width, 0),
                 new Point(0, 0),
-                new Point(0, 27) });
+                new Point(0, SIZE.Height) });
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             using (SolidBrush brush = new SolidBrush(this.ForeColor))
             {

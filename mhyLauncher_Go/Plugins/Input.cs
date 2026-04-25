@@ -66,6 +66,10 @@ namespace MHYLAUNCHER_GO.Plugins
                 };
             }
             this.panel_Trace.Width = (this.panel_Trace.Width + this.panel_Trace.Right - this.label_trace.Left - this.label_tip.Right) / 2;
+            this.textBox_LICENSE.Layout += (sender, e) =>
+            {
+                this.textBox_LICENSE.Height = this.pictureBox_github.Top - this.textBox_LICENSE.Top - this.textBox_LICENSE.Margin.Bottom;
+            };
             this.Load += (sender, e) => // 配置窗口绑定
             {
                 this.SetDWM(false, true, this.label_background.BackColor.TO_COLORREF(), this.ForeColor.TO_COLORREF(), true);

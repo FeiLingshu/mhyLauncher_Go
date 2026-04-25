@@ -18,12 +18,10 @@ namespace MHYLAUNCHER_GO.Plugins
         /// 初始化提示信息窗口
         /// </summary>
         /// <param name="Width">窗口宽度</param>
-        /// <param name="Height">窗口高度</param>
-        public Notify(int Width, int Height)
+        public Notify(int Width)
         {
             InitializeComponent();
             this.widthcache = Width;
-            this.heightcache = Height;
             this.Load += Notify_Load;
             this.Shown += Notify_Shown;
             this.label.Paint += Label_Paint;
@@ -34,11 +32,6 @@ namespace MHYLAUNCHER_GO.Plugins
         /// 用于存储窗口设计宽度的内部字段
         /// </summary>
         private readonly int widthcache = 0;
-
-        /// <summary>
-        /// 用于存储窗口设计高度的内部字段
-        /// </summary>
-        private readonly int heightcache = 0;
 
         /// <summary>
         /// 重写CreateParams属性用于配置窗口风格
@@ -56,6 +49,27 @@ namespace MHYLAUNCHER_GO.Plugins
         }
 
         /// <summary>
+        /// 自动计算窗口高度
+        /// </summary>
+        /// <param name="pad">要预留的额外高度空间</param>
+        /// <returns>返回计算结果</returns>
+        private int GetHeight(int pad)
+        {
+            double ratio = 25D / 235D;
+            if (widthcache == 235)
+            {
+                this.copyright.Height = 25;
+            }
+            else
+            {
+                this.copyright.Height = (int)Math.Round(widthcache * ratio, MidpointRounding.AwayFromZero); ;
+            }
+            string std = this.label.Tag as string;
+            int labelheight = TextRenderer.MeasureText(std, this.label.Font).Height;
+            return labelheight + this.copyright.Height + pad;
+        }
+
+        /// <summary>
         /// 窗口加载时配置窗口属性
         /// </summary>
         /// <param name="sender">事件来源</param>
@@ -64,7 +78,8 @@ namespace MHYLAUNCHER_GO.Plugins
         {
             this.SetDWM(true, true, this.label.BackColor.TO_COLORREF(), this.ForeColor.TO_COLORREF(), false);
             this.Width = widthcache;
-            this.Height = heightcache;
+            this.Height = GetHeight(50);
+            this.Top -= this.Height;
             this.label.Height = this.copyright.Location.Y;
             if (this.Handle == IntPtr.Zero) return;
             IntPtr menuhwnd = GetSystemMenu(this.Handle, false);
