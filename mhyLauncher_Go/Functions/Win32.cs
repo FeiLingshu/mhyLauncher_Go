@@ -751,37 +751,6 @@ namespace MHYLAUNCHER_GO.Functions
         public static extern bool FreeConsole();
 
         /// <summary>
-        /// 进程权限枚举
-        /// </summary>
-        [Flags]
-        public enum ProcessAccessFlags : uint
-        {
-            PROCESS_VM_READ = 0x00000010,
-            PROCESS_QUERY_INFORMATION = 0x00000400
-        }
-
-        /// <summary>
-        /// 获取进程句柄
-        /// </summary>
-        /// <param name="processAccess">进程权限</param>
-        /// <param name="bInheritHandle">指示子进程是否继承句柄</param>
-        /// <param name="processId">进程ID</param>
-        /// <returns>返回操作是否成功</returns>
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr OpenProcess(
-            ProcessAccessFlags processAccess,
-            bool bInheritHandle,
-            int processId);
-
-        /// <summary>
-        /// 关闭句柄
-        /// </summary>
-        /// <param name="hObject">目标句柄</param>
-        /// <returns>返回操作是否成功</returns>
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool CloseHandle(IntPtr hObject);
-
-        /// <summary>
         /// 获取指定进程的父进程
         /// <para>该函数为内核函数 &lt;- [NtQueryInformationProcess 在 Windows 的未来版本中可能已更改或不可用。 应用程序应使用本主题中列出的备用函数。]</para>
         /// <a href="https://learn.microsoft.com/zh-cn/windows/win32/api/winternl/nf-winternl-ntqueryinformationprocess">MSDN页面</a>
@@ -842,6 +811,10 @@ namespace MHYLAUNCHER_GO.Functions
         /// </summary>
         public const int STD_OUTPUT_HANDLE = -11;
         /// <summary>
+        /// 指示标准错误流
+        /// </summary>
+        public const int STD_ERROR_HANDLE = -12;
+        /// <summary>
         /// 指示无效句柄
         /// </summary>
         public static readonly IntPtr INVALID_HANDLE_VALUE = (IntPtr)(-1);
@@ -853,6 +826,23 @@ namespace MHYLAUNCHER_GO.Functions
         /// <returns>返回当前进程指定标准设备的句柄</returns>
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetStdHandle(int nStdHandle);
+
+        /// <summary>
+        /// 设置当前进程指定标准设备的句柄
+        /// </summary>
+        /// <param name="nStdHandle">标准设备的类型</param>
+        /// <param name="hHandle">流句柄</param>
+        /// <returns>返回操作是否成功</returns>
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetStdHandle(int nStdHandle, IntPtr hHandle);
+
+        /// <summary>
+        /// 关闭句柄
+        /// </summary>
+        /// <param name="hObject">目标句柄</param>
+        /// <returns>返回操作是否成功</returns>
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool CloseHandle(IntPtr hObject);
 
         /// <summary>
         /// 配置控制台代码页
@@ -903,7 +893,8 @@ namespace MHYLAUNCHER_GO.Functions
         /// <param name="lpConsoleCurrentFont">包含字体信息的win32结构lpConsoleCurrentFont</param>
         /// <returns>返回操作是否成功</returns>
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool SetCurrentConsoleFontEx(IntPtr hConsoleOutput, bool bMaximumWindow, ref CONSOLE_FONT_INFO_EX lpConsoleCurrentFont);
+        public static extern bool SetCurrentConsoleFontEx(
+            IntPtr hConsoleOutput, bool bMaximumWindow, ref CONSOLE_FONT_INFO_EX lpConsoleCurrentFont);
 
         /// <summary>
         /// 声明win32结构COORD
@@ -1088,6 +1079,50 @@ namespace MHYLAUNCHER_GO.Functions
         /// <returns>返回操作是否成功</returns>
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetConsoleScreenBufferInfoEx(IntPtr hConsoleOutput, ref CONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
+
+        #endregion
+
+        #region 控制台相关互操作声明（补充）
+
+        public const uint GENERIC_READ = 0x80000000;
+        public const uint GENERIC_WRITE = 0x40000000;
+        public const uint FILE_SHARE_READ = 0x00000001;
+        public const uint FILE_SHARE_WRITE = 0x00000002;
+        public const uint OPEN_EXISTING = 3;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr CreateFile(
+            string lpFileName,
+            uint dwDesiredAccess,
+            uint dwShareMode,
+            IntPtr lpSecurityAttributes,
+            uint dwCreationDisposition,
+            uint dwFlagsAndAttributes,
+            IntPtr hTemplateFile);
+
+        /// <summary>
+        /// win32enum::ProcessAccessFlags
+        /// </summary>
+        [Flags]
+        public enum ProcessAccessFlags : uint
+        {
+            PROCESS_SET_INFORMATION = 0x00000200,
+            PROCESS_QUERY_INFORMATION = 0x00000400,
+            PROCESS_VM_READ = 0x00000010
+        }
+
+        /// <summary>
+        /// win32api::OpenProcess
+        /// </summary>
+        /// <param name="processAccess">param#1</param>
+        /// <param name="bInheritHandle">param#2</param>
+        /// <param name="processId">param#3</param>
+        /// <returns>returns</returns>
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr OpenProcess(
+            ProcessAccessFlags processAccess,
+            bool bInheritHandle,
+            int processId);
 
         #endregion
 
@@ -1395,14 +1430,14 @@ namespace MHYLAUNCHER_GO.Functions
             {
                 if (!Win32.AttachConsole(Win32.ATTACH_PARENT_PROCESS) && Win32.GetConsoleWindow() == IntPtr.Zero)
                 {
-                    if (Win32.AllocConsole())
+                    if (BugFix.CreatConsole())
                     {
                         // 启动Trace组件
                         if (mainbase.TraceInitialize == null)
                         {
                             mainbase.TraceInitialize = Task.Run(() =>
                             {
-                                BugFix.RefreshConsoleHandle(false, null); // 必须对原始Console类的私有成员进行访问，具体参阅函数说明
+                                BugFix.RefreshConsoleHandle(Debugger.IsAttached, null); // 必须对原始Console类的私有成员进行访问，具体参阅函数说明
                                 Application.Current.Dispatcher.Invoke(() =>
                                 {
                                     Trace.Listeners.Add(new TraceListenerEx(Win32.GetConsoleWindow()));
@@ -1447,43 +1482,65 @@ namespace MHYLAUNCHER_GO.Functions
         /// </para>
         /// <para>注意：执行反射会消耗较长时间，代码应在单独线程中执行</para>
         /// </summary>
-        /// <param name="reset_to_zero">是否重置相关字段为null</param>
+        /// <param name="reset">是否重置相关字段，一般情况下仅在调试时使用</param>
         /// <param name="parent">调用该方法的窗口实例</param>
-        public static void RefreshConsoleHandle(bool reset_to_zero, Form parent)
+        public static void RefreshConsoleHandle(bool reset, Form parent)
         {
-            // 重新分配新的输入/输出/错误流，重定向错误流至输出流(Trace会将日志输出至错误流中)，并配置字符串编码器
-            Console.SetOut(new StreamWriter(Console.OpenStandardOutput(), new UTF8Encoding(false)) { AutoFlush = true });
-            Console.SetIn(new StreamReader(Console.OpenStandardInput(), new UTF8Encoding(false)));
-            Console.SetError(new StreamWriter(Console.OpenStandardOutput(), new UTF8Encoding(false)) { AutoFlush = true });
-            // 尝试通过反射修改Console类私有字段
             try
             {
                 // 获取Console类的Type对象
                 Type consoleType = typeof(Console);
                 // 获取私有静态字段
                 if (handleField_out == null) handleField_out =
-                        consoleType.GetField("_consoleOutputHandle", BindingFlags.Static | BindingFlags.NonPublic);
+                    consoleType.GetField("_consoleOutputHandle", BindingFlags.Static | BindingFlags.NonPublic);
                 if (handleField_in == null) handleField_in =
-                        consoleType.GetField("_consoleInputHandle", BindingFlags.Static | BindingFlags.NonPublic);
+                    consoleType.GetField("_consoleInputHandle", BindingFlags.Static | BindingFlags.NonPublic);
                 // 配置私有静态字段
-                if (reset_to_zero)
+                if (reset && is_Redirected)
                 {
-                    handleField_out?.SetValue(null, null);
-                    handleField_in?.SetValue(null, null);
+                    // 获取标准设备句柄
+                    IntPtr consoleOut = CreateFile("CONOUT$", GENERIC_READ | GENERIC_WRITE,
+                        FILE_SHARE_READ | FILE_SHARE_WRITE, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
+                    IntPtr consoleIn = CreateFile("CONIN$", GENERIC_READ | GENERIC_WRITE,
+                        FILE_SHARE_READ | FILE_SHARE_WRITE, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
+                    hwnds[0] = consoleOut;
+                    hwnds[1] = consoleIn;
+                    // 重定向win32流
+                    SetStdHandle(STD_OUTPUT_HANDLE, consoleOut);
+                    SetStdHandle(STD_ERROR_HANDLE, consoleOut);
+                    SetStdHandle(STD_INPUT_HANDLE, consoleIn);
+                    // 重新配置内部字段
+                    handleField_out?.SetValue(null, consoleOut); // 需要移除JIT编译器的类型安全检查
+                    handleField_in?.SetValue(null, consoleIn);
+                    // 重定向.Net流
+                    Console.SetOut(new StreamWriter(Console.OpenStandardOutput(), utf8) { AutoFlush = true });
+                    Console.SetIn(new StreamReader(Console.OpenStandardInput(), utf8));
+                    Console.SetError(new StreamWriter(Console.OpenStandardOutput(), utf8) { AutoFlush = true });
                 }
                 else
                 {
-                    IntPtr newHandle_out = Win32.GetStdHandle(Win32.STD_OUTPUT_HANDLE);
-                    // IntPtr newHandle_in = Win32.GetStdHandle(Win32.STD_INPUT_HANDLE);
-                    handleField_out?.SetValue(null, newHandle_out); // 需要移除JIT编译器的类型安全检查
-                    handleField_in?.SetValue(null, null); // 由于控制台窗口为动态绑定，且程序并非控制台应用程序，故不使用标准输入流
+                    // 获取控制台数据流
+                    IntPtr stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+                    IntPtr stdErrorHandle = GetStdHandle(STD_ERROR_HANDLE);
+                    IntPtr stdInputHandle = GetStdHandle(STD_INPUT_HANDLE);
+                    // 重定向win32流
+                    SetStdHandle(STD_OUTPUT_HANDLE, stdOutHandle);
+                    SetStdHandle(STD_ERROR_HANDLE, stdOutHandle);
+                    SetStdHandle(STD_INPUT_HANDLE, stdInputHandle);
+                    // 重新配置内部字段
+                    handleField_out?.SetValue(null, stdOutHandle); // 需要移除JIT编译器的类型安全检查
+                    handleField_in?.SetValue(null, stdInputHandle);
+                    // 重定向.Net流
+                    Console.SetOut(new StreamWriter(Console.OpenStandardOutput(), utf8) { AutoFlush = true });
+                    Console.SetIn(new StreamReader(Console.OpenStandardInput(), utf8));
+                    Console.SetError(new StreamWriter(Console.OpenStandardOutput(), utf8) { AutoFlush = true });
                 }
             }
             catch (Exception ex)
             {
                 if (parent == null)
                 {
-                    Win32.FreeConsole();
+                    CloseConsole();
                     MessageBox.Show(
                         "通过反射修改Console类内部字段时出现异常。" +
                         $"\n{ex.Message}\n{ex.GetType()}\n{ex.StackTrace}",
@@ -1493,7 +1550,7 @@ namespace MHYLAUNCHER_GO.Functions
                 }
                 else
                 {
-                    Win32.FreeConsole();
+                    CloseConsole();
                     MessageBox.Show(
                         parent,
                         "通过反射修改Console类内部字段时出现异常。" +
@@ -1506,7 +1563,7 @@ namespace MHYLAUNCHER_GO.Functions
         }
 
         /// <summary>
-        /// 初始化所有反射资源（可用于强制更新）
+        /// 初始化所有反射资源
         /// </summary>
         public static void Initialize()
         {
@@ -1514,9 +1571,9 @@ namespace MHYLAUNCHER_GO.Functions
             {
                 Type consoleType = typeof(Console);
                 handleField_out =
-                        consoleType.GetField("_consoleOutputHandle", BindingFlags.Static | BindingFlags.NonPublic);
+                    consoleType.GetField("_consoleOutputHandle", BindingFlags.Static | BindingFlags.NonPublic);
                 handleField_in =
-                        consoleType.GetField("_consoleInputHandle", BindingFlags.Static | BindingFlags.NonPublic);
+                    consoleType.GetField("_consoleInputHandle", BindingFlags.Static | BindingFlags.NonPublic);
             }
             catch (Exception ex)
             {
@@ -1526,6 +1583,89 @@ namespace MHYLAUNCHER_GO.Functions
                     "反射执行出现异常...",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// 执行预操作（需在调用 win32api::AllocConsole 前进行）
+        /// </summary>
+        private static void Pre()
+        {
+            try
+            {
+                IntPtr stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+                IntPtr stdErrorHandle = GetStdHandle(STD_ERROR_HANDLE);
+                IntPtr stdInputHandle = GetStdHandle(STD_INPUT_HANDLE);
+                bool _ = true;
+                _ &= (stdOutHandle == IntPtr.Zero || stdOutHandle == INVALID_HANDLE_VALUE);
+                _ &= (stdErrorHandle == IntPtr.Zero || stdErrorHandle == INVALID_HANDLE_VALUE);
+                _ &= (stdInputHandle == IntPtr.Zero || stdInputHandle == INVALID_HANDLE_VALUE);
+                is_Redirected = !_;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "初始化反射相关资源时出现异常。" +
+                    $"\n{ex.Message}\n{ex.GetType()}\n{ex.StackTrace}",
+                    "反射执行出现异常...",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// 安全创建控制台窗口
+        /// </summary>
+        /// <returns>返回操作是否成功</returns>
+        public static bool CreatConsole()
+        {
+            Pre();
+            return AllocConsole();
+        }
+
+        /// <summary>
+        /// 切换控制台编码方式
+        /// </summary>
+        /// <param name="codepage">目标代码页</param>
+        public static void SetCodePage(uint codepage)
+        {
+            var coder = Encoding.GetEncoding((int)codepage);
+            Console.OutputEncoding = coder;
+            Console.InputEncoding = coder;
+        }
+
+        /// <summary>
+        /// 缓存UTF-8编码器实例
+        /// </summary>
+        public static readonly Encoding utf8 = new UTF8Encoding(false);
+
+        /// <summary>
+        /// 标志位：指示句柄是否被重定向
+        /// </summary>
+        private static bool is_Redirected = false;
+
+        /// <summary>
+        /// 保存新句柄信息
+        /// </summary>
+        private static readonly IntPtr[] hwnds = new IntPtr[2];
+
+        /// <summary>
+        /// 安全关闭控制台窗口
+        /// </summary>
+        public static void CloseConsole()
+        {
+            FreeConsole();
+            if (hwnds != null)
+            {
+                foreach (var hwnd in hwnds)
+                {
+                    if (hwnd != IntPtr.Zero && hwnd != INVALID_HANDLE_VALUE)
+                    {
+                        CloseHandle(hwnd);
+                    }
+                }
+                hwnds[0] = IntPtr.Zero;
+                hwnds[1] = IntPtr.Zero;
             }
         }
     }

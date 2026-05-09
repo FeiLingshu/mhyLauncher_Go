@@ -178,7 +178,7 @@ namespace MHYLAUNCHER_GO.Functions
                     case CTRL_C_EVENT:
                         SetConsoleCtrlHandler(CCD, false);
                         Trace.Listeners.Remove(this);
-                        FreeConsole();
+                        BugFix.CloseConsole();
                         GC.KeepAlive(CCD);
                         return true;
                     case CTRL_BREAK_EVENT:
