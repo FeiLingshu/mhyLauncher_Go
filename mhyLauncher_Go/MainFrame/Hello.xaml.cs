@@ -27,7 +27,7 @@ namespace MHYLAUNCHER_GO.MainFrame
         /// <summary>
         /// 用于版本标识的内部字段
         /// </summary>
-        private readonly string version = "https://github.com/FeiLingshu/mhyLauncher_Go/releases/tag/V2-Opt-1";
+        private readonly string version = "https://github.com/FeiLingshu/mhyLauncher_Go/releases/tag/V2-Opt-2";
 
         /// <summary>
         /// 用于检查版本更新的http地址

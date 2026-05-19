@@ -233,7 +233,7 @@
     <None Include="Plugins\2705.svg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="README.md" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LOGO.svg" />
@@ -260,7 +260,7 @@
     <None Include="Module %28local%29\video.mp4" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="md-styles.css" />
+    <None Include="md-styles.css" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Module %28local%29\EfficiencyMode.dll" />

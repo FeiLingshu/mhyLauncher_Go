@@ -420,7 +420,7 @@ namespace MHYLAUNCHER_GO
                     break;
                 }
                 startcount++;
-                if (startcount >= 100)
+                if (startcount >= 300)
                 {
                     throw new InvalidOperationException("无法捕获米哈游启动器窗口。");
                 }
