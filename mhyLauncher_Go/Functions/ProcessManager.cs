@@ -188,7 +188,7 @@ namespace MHYLAUNCHER_GO.Functions
                                         IntPtr hwnd = IntPtr.Zero;
                                         do
                                         {
-                                            if (games[index].HasExited || timeout == 50)
+                                            if (games[index].HasExited || timeout == 300)
                                             {
                                                 timeout = 0;
                                                 int taskresult = 0;
