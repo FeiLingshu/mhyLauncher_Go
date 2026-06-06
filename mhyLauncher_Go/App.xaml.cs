@@ -1,6 +1,9 @@
 ﻿using MHYLAUNCHER_GO.Functions;
+using MHYLAUNCHER_GO.Functions.Config;
 using MHYLAUNCHER_GO.Functions.Core;
 using MHYLAUNCHER_GO.Functions.Dump;
+using MHYLAUNCHER_GO.Functions.Font;
+using MHYLAUNCHER_GO.Functions.IO;
 using MHYLAUNCHER_GO.MainFrame;
 using MHYLAUNCHER_GO.Plugins;
 using System;
@@ -40,7 +43,6 @@ namespace MHYLAUNCHER_GO
         /// <param name="e">事件参数</param>
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            // new Hello(this, () => { }).ShowDialog(); // 测试用代码
             Main(e.Args, this);
         }
 
@@ -307,6 +309,8 @@ namespace MHYLAUNCHER_GO
                     }
                 }
             }
+            // 检测并尝试安装本地字体
+            FontInstall.Exists = FontInstall.CheckFont(PE);
             // 初始化局部变量
             AutoResetEvent timer = new AutoResetEvent(false);
             bool binstate = false;
@@ -561,7 +565,7 @@ namespace MHYLAUNCHER_GO
                                 {
                                     $"窗口位置锁定模块",
                                     $"状态：已激活"
-                                }));
+                                }), ConsoleColor.Green);
                             movestate = false;
                         };
                     }
@@ -577,7 +581,7 @@ namespace MHYLAUNCHER_GO
                             {
                                 $"窗口位置锁定模块",
                                 $"状态：未激活"
-                            }));
+                            }), ConsoleColor.Gray);
                         movestate = true;
                     }
                 }
@@ -630,7 +634,7 @@ namespace MHYLAUNCHER_GO
                                 $"#       Width： {checkout_r.Width,4} {(size ? "(已忽略)" : $"-> {rectangle.Width,4}")}",
                                 $"#       Height：{checkout_r.Height,4} {(size ? "(已忽略)" : $"-> {rectangle.Height,4}")}",
                                 $"强制更新窗口框架：{forceupdate}"
-                                }));
+                                }), ConsoleColor.Blue);
                             return true;
                     }
                     return false;
@@ -698,7 +702,7 @@ namespace MHYLAUNCHER_GO
                                     $"窗口标题变化事件",
                                     $"原始：{originaltitle}",
                                     $"当前：{originaltitle}{addupstd}"
-                                }));
+                                }), ConsoleColor.Yellow);
                             return true;
                         }
                         return false;
@@ -949,7 +953,7 @@ namespace MHYLAUNCHER_GO
                 DateTime.Now,
                 "窗口管理器",
                 10,
-                log.ToArray()));
+                log.ToArray()), ConsoleColor.Gray);
             return Param;
         }
 

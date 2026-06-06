@@ -109,21 +109,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Functions\BIN.cs" />
+    <Compile Include="Functions\Config\BIN.cs" />
     <Compile Include="Functions\Core\Load.cs" />
     <Compile Include="Functions\Dump\DumpGenerator.cs" />
-    <Compile Include="Functions\MD5.cs" />
+    <Compile Include="Functions\Font\FileIO.cs" />
+    <Compile Include="Functions\Font\FontInstall.cs" />
+    <Compile Include="Functions\IO\MD5.cs" />
     <Compile Include="MainFrame\AnimationHelper\AnimationManager.cs" />
     <Compile Include="MainFrame\Hello.xaml.cs">
       <DependentUpon>Hello.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Obsolete\INI.cs" />
-    <Compile Include="Functions\MsgBeep.cs" />
+    <Compile Include="Functions\IO\MsgBeep.cs" />
     <Compile Include="Functions\ProcessManager.cs" />
-    <Compile Include="Obsolete\ProcessTool.cs" />
     <Compile Include="Functions\TraceListenerEx.cs" />
     <Compile Include="Functions\Win32.cs" />
-    <Compile Include="Obsolete\WMI.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Plugins\Input.cs">
@@ -191,7 +190,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="LICENSE" />
-    <Resource Include="MainFrame\CascadiaMono.ttf" />
+    <None Include="Module %28local%29\GiteeGit.otf" />
     <None Include="Plugins\watermask.psd" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
