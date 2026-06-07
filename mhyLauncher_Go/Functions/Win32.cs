@@ -1372,6 +1372,55 @@ namespace MHYLAUNCHER_GO.Functions
         }
 
         /// <summary>
+        /// 向跟踪器打印Trace信息
+        /// </summary>
+        /// <param name="message">Trace信息</param>
+        /// <param name="fcolor">信息的显示颜色</param>
+        public static void Print((string[] message, int line) data, ConsoleColor fcolor)
+        {
+            if (data.message == null)
+            {
+                return;
+            }
+            if (Trace.Listeners.OfType<TraceListenerEx>().Any())
+            {
+                if (data.message.Length != 4)
+                {
+                    throw new ArgumentException("解析日志字符串时发生错误。");
+                }
+                //Console.Write(new string('\n', data.line)); // 会导致闪烁，不要使用
+                //Console.CursorTop -= data.line;
+                ConsoleColor cc = Console.ForegroundColor;
+                Console.ForegroundColor = fcolor;
+                Trace.Write(data.message[0]);
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Trace.Write(data.message[1]);
+                Console.ForegroundColor = fcolor;
+                Trace.WriteLine(data.message[2]);
+                foreach (var line in data.message[3].Split('\n'))
+                {
+                    string[] linepart = line.Split('\r');
+                    if (linepart.Length != 2)
+                    {
+                        throw new ArgumentException("解析日志字符串时发生错误。");
+                    }
+                    if (linepart[0].Trim().Length == 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Trace.Write(" · ");
+                        Console.ForegroundColor = fcolor;
+                        Trace.WriteLine(linepart[1]);
+                    }
+                    else
+                    {
+                        Trace.WriteLine($"{linepart[0]}{linepart[1]}");
+                    }
+                }
+                Console.ForegroundColor = cc;
+            }
+        }
+
+        /// <summary>
         /// 格式化Trace信息
         /// <para>
         /// (char)32   -> ' '<br/>
@@ -1424,6 +1473,57 @@ namespace MHYLAUNCHER_GO.Functions
         }
 
         /// <summary>
+        /// 格式化Trace信息
+        /// <para>
+        /// 使用\n作为行分隔标志<br/>
+        /// 使用\r作为行中分隔标志
+        /// </para>
+        /// </summary>
+        /// <param name="time">时间</param>
+        /// <param name="title">标题</param>
+        /// <param name="message">信息内容</param>
+        /// <returns>返回格式化后的Trace字符串</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0042:析构变量声明", Justification = "<挂起>")]
+        public static (string[] message, int line) FormatMessage(DateTime time, string title, string message)
+        {
+            if (!Trace.Listeners.OfType<TraceListenerEx>().Any())
+            {
+                return (null, 0);
+            }
+            string[] msgs = new string[4];
+            msgs[0] = $" {title}";
+            msgs[2] = $"[{time:HH:mm:ss}] ";
+            msgs[1] = new string('·', Console.WindowWidth - msgs[0].GetConsCharLen() - msgs[2].GetConsCharLen());
+            int linecount = 1;
+            StringBuilder sbuilder = new StringBuilder(short.MaxValue);
+            foreach (var line in message.Split('\n'))
+            {
+                (string std, int length) linehead = (string.Empty, 0);
+                string linetail = string.Empty;
+                string[] parts = line.Split('\r');
+                linehead.std = $" {parts[0]} ";
+                linehead.length = linehead.std.GetConsCharLen() + (linehead.std.Trim().Length == 0 ? 1 : 0);
+                if (parts.Length >= 2)
+                {
+                    StringBuilder _sbuilder = new StringBuilder(short.MaxValue);
+                    for (int i = 1; i < parts.Length; i++)
+                    {
+                        _sbuilder.Append(parts[i]);
+                    }
+                    _sbuilder.Append((char)32);
+                    linetail = _sbuilder.ToString().ReLength(Console.WindowWidth - linehead.length);
+                    _sbuilder.Clear();
+                }
+                sbuilder.Append($"{linehead.std}\r{linetail}\n");
+                linecount++;
+            }
+            sbuilder.Length--;
+            msgs[3] = sbuilder.ToString();
+            sbuilder.Clear();
+            return (msgs, linecount);
+        }
+
+        /// <summary>
         /// 启动Trace组件
         /// </summary>
         /// <param name="mainbase">主应用程序域实例</param>
@@ -1443,6 +1543,7 @@ namespace MHYLAUNCHER_GO.Functions
                             mainbase.TraceInitialize = Task.Run(() =>
                             {
                                 BugFix.RefreshConsoleHandle(Debugger.IsAttached); // 必须对原始Console类的私有成员进行访问，具体参阅函数说明
+                                
                                 Application.Current.Dispatcher.Invoke(() =>
                                 {
                                     Trace.Listeners.Add(new TraceListenerEx(Win32.GetConsoleWindow()));
@@ -1457,6 +1558,150 @@ namespace MHYLAUNCHER_GO.Functions
                             $"未识别到正确的控制台窗口句柄({Marshal.GetLastWin32Error().ToString().PadLeft(4, '0')})。");
                     }
                 }
+            }
+        }
+    }
+
+    public static class ConsoleCharLength
+    {
+        private static byte[] dictionary = /*Resources.bin*/null;
+        
+        private static int GetCharLen(int c, int x, int y)
+        {
+            if (c < 32 || c == 127)
+            {
+                return -1;
+            }
+            Console.CursorLeft = x;
+            Console.CursorTop = y;
+            int start = Console.CursorLeft;
+            Console.Write((char)c);
+            return Console.CursorLeft - start;
+        }
+
+        public static int GenerateConsCharLenBin(string selfpath)
+        {
+            int x = Console.WindowWidth / 2 - 1;
+            int y = Console.WindowHeight / 2 - 1;
+            byte[] lens = new byte[(int)Math.Ceiling((double)(char.MaxValue + 1) / 4)];
+            int index = 0;
+            for (int i = 0; i < lens.Length; i++)
+            {
+                byte b = 0;
+                for (int j = 0; j < 8; j += 2)
+                {
+                    switch (GetCharLen(index, x, y))
+                    {
+                        case 0:
+                            b |= (byte)(0b01 << (6 - j));
+                            break;
+                        case 1:
+                            b |= (byte)(0b10 << (6 - j));
+                            break;
+                        case 2:
+                            b |= (byte)(0b11 << (6 - j));
+                            break;
+                        default:
+                            b |= (byte)(0b00 << (6 - j));
+                            break;
+                    }
+                    index++;
+                }
+                lens[i] = b;
+            }
+            File.WriteAllBytes($"{Path.GetDirectoryName(selfpath)}\\dictionary.bin", lens);
+            return lens.Length;
+        }
+
+        public static void LoadResource()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string resourceName = "MHYLAUNCHER_GO.Functions.dictionary.bin";
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (var reader = new BinaryReader(stream))
+                {
+                    dictionary = reader.ReadBytes((int)stream.Length);
+                }
+            }
+        }
+
+        public static int GetConsCharLen(this string line)
+        {
+            if (dictionary == null) LoadResource();
+            int length = 0;
+            foreach (var c in line)
+            {
+                byte target = dictionary[(int)c / 4];
+                byte bitindex = (byte)(c % 4 * 2);
+                byte output = (byte)((target >> (6 - bitindex)) & 0b11);
+                switch (output)
+                {
+                    case 0b01:
+                        length += 0;
+                        break;
+                    case 0b10:
+                        length += 1;
+                        break;
+                    case 0b11:
+                        length += 2;
+                        break;
+                    default:
+                        throw new ArgumentException($"无法解析字符(\\u{(int)c:x4})的长度。");
+                }
+            }
+            return length;
+        }
+
+        public static int GetConsCharLen(this char c)
+        {
+            if (dictionary == null) LoadResource();
+            byte target = dictionary[(int)c / 4];
+            byte bitindex = (byte)(c % 4 * 2);
+            byte output = (byte)((target >> (6 - bitindex)) & 0b11);
+            switch (output)
+            {
+                case 0b01:
+                    return 0;
+                case 0b10:
+                    return 1;
+                case 0b11:
+                    return 2;
+                default:
+                    throw new ArgumentException($"无法解析字符(\\u{(int)c:x4})的长度。");
+            }
+        }
+
+        public static string ReLength(this string std, int maxlength)
+        {
+            int length = std.GetConsCharLen();
+            if (length <= maxlength)
+            {
+                return $"{new string((char)32, maxlength - length)}{std}";
+            }
+            else
+            {
+                int off = length - (maxlength - 3);
+                string pool = std.Substring(0, off);
+                int[] len = new int[pool.Length];
+                for (int i = 0; i < len.Length; i++)
+                {
+                    len[i] = pool[i].GetConsCharLen();
+                }
+                int _totlelen = 0;
+                int charcount = 0;
+                int cache = 0;
+                foreach (int _len in len)
+                {
+                    _totlelen += _len;
+                    charcount++;
+                    if (_len >= off)
+                    {
+                        cache = _len - off;
+                        break;
+                    }
+                }
+                return $"{new string((char)32, cache)}...{std.Substring(charcount)}";
             }
         }
     }

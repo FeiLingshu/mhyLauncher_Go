@@ -194,12 +194,9 @@ namespace MHYLAUNCHER_GO.Plugins
             TraceExtensions.Print(TraceExtensions.FormatMessage(
                 DateTime.Now,
                 "Win32数据",
-                9,
-                new string[2]
-                {
-                    $"进程ID: 0x{pid:X8}",
-                    $"线程ID: 0x{tid:X8}"
-                }), ConsoleColor.Yellow);
+                $"进程ID: \r0x{pid:X8}\n" +
+                $"线程ID: \r0x{tid:X8}"),
+                ConsoleColor.Yellow);
             IntPtr handle = this.Handle;
             WinEventDelegate EventDelegate = (
                 hWinEventHook, eventType,
@@ -214,16 +211,13 @@ namespace MHYLAUNCHER_GO.Plugins
                         TraceExtensions.Print(TraceExtensions.FormatMessage(
                             DateTime.Now,
                             "Win32数据",
-                            9,
-                            new string[6]
-                            {
-                                $"消息常量：EVENT_SYSTEM_MOVESIZEEND = 0x{EVENT_SYSTEM_MOVESIZEEND:X4}",
-                                $"RECT结构：Left   = {win32bindresult.rect.Left,4}",
-                                $"#          Top    = {win32bindresult.rect.Top,4}",
-                                $"#          Right  = {win32bindresult.rect.Right,4}",
-                                $"#          Bottom = {win32bindresult.rect.Bottom,4}",
-                                $"屏幕空间溢出：{(win32bindresult.overflow ? "已处理" : "已跳过")}"
-                            }), ConsoleColor.Yellow);
+                            $"消息常量：\rEVENT_SYSTEM_MOVESIZEEND = 0x{EVENT_SYSTEM_MOVESIZEEND:X4}\n" +
+                            $"RECT结构：\rLeft   = {win32bindresult.rect.Left,4}\n" +
+                            $"\rTop    = {win32bindresult.rect.Top,4}\n" +
+                            $"\rRight  = {win32bindresult.rect.Right,4}\n" +
+                            $"\rBottom = {win32bindresult.rect.Bottom,4}\n" +
+                            $"屏幕空间溢出：\r{(win32bindresult.overflow ? "已处理" : "已跳过")}"),
+                            ConsoleColor.Yellow);
                     }
                 }
             };
@@ -519,16 +513,13 @@ namespace MHYLAUNCHER_GO.Plugins
                                 TraceExtensions.Print(TraceExtensions.FormatMessage(
                                     DateTime.Now,
                                     "Win32数据",
-                                    9,
-                                    new string[6]
-                                    {
-                                        $"消息常量：EVENT_SYSTEM_MOVESIZEEND = 0x{EVENT_SYSTEM_MOVESIZEEND:X4}",
-                                        $"RECT结构：Left   = {win32bindresult.rect.Left,4}",
-                                        $"#          Top    = {win32bindresult.rect.Top,4}",
-                                        $"#          Right  = {win32bindresult.rect.Right,4}",
-                                        $"#          Bottom = {win32bindresult.rect.Bottom,4}",
-                                        $"屏幕空间溢出：{(win32bindresult.overflow ? "已处理" : "已跳过")}"
-                                    }), ConsoleColor.Yellow);
+                                    $"消息常量：\rEVENT_SYSTEM_MOVESIZEEND = 0x{EVENT_SYSTEM_MOVESIZEEND:X4}\n" +
+                                    $"RECT结构：\rLeft   = {win32bindresult.rect.Left,4}\n" +
+                                    $"\rTop    = {win32bindresult.rect.Top,4}\n" +
+                                    $"\rRight  = {win32bindresult.rect.Right,4}\n" +
+                                    $"\rBottom = {win32bindresult.rect.Bottom,4}\n" +
+                                    $"屏幕空间溢出：\r{(win32bindresult.overflow ? "已处理" : "已跳过")}"),
+                                    ConsoleColor.Yellow);
                                 win32preset = true;
                             }
                         }
@@ -546,18 +537,15 @@ namespace MHYLAUNCHER_GO.Plugins
                                 TraceExtensions.Print(TraceExtensions.FormatMessage(
                                     DateTime.Now,
                                     "临时数据（实验功能）",
-                                    20,
-                                    new string[8]
-                                    {
-                                        $"CACHE: {CACHE.IS_VISIBLE}",
-                                        $"#       {CACHE.IS_ICONIC}",
-                                        $"#       0x{CACHE.STATE:X4}",
-                                        $"TO:    {!isHidden}",
-                                        $"#       {isMinimized}",
-                                        $"#       0x{0:X4}",
-                                        "模式：强制",
-                                        "代码尚处实验阶段，相应调试信息予以保留..."
-                                    }), ConsoleColor.Yellow);
+                                    $"CACHE: \r{CACHE.IS_VISIBLE}\n" +
+                                    $"\r{CACHE.IS_ICONIC}\n" +
+                                    $"\r0x{CACHE.STATE:X4}\n" +
+                                    $"TO:    \r{!isHidden}\n" +
+                                    $"\r{isMinimized}\n" +
+                                    $"\r0x{0:X4}\n" +
+                                    "模式：\r强制\n" +
+                                    "代码尚处实验阶段，相应调试信息予以保留...\r"),
+                                    ConsoleColor.Yellow);
                                 CACHE.IS_VISIBLE = !isHidden;
                                 CACHE.IS_ICONIC = isMinimized;
                                 CACHE.STATE = 0x0000;
@@ -595,18 +583,15 @@ namespace MHYLAUNCHER_GO.Plugins
                                 TraceExtensions.Print(TraceExtensions.FormatMessage(
                                     DateTime.Now,
                                     "临时数据（实验功能）",
-                                    20,
-                                    new string[8]
-                                    {
-                                        $"CACHE: {CACHE.IS_VISIBLE}",
-                                        $"#       {CACHE.IS_ICONIC}",
-                                        $"#       0x{CACHE.STATE:X4}",
-                                        $"TO:    {true}",
-                                        $"#       {true}",
-                                        $"#       0x{0:X4}",
-                                        "模式：主动",
-                                        "代码尚处实验阶段，相应调试信息予以保留..."
-                                    }), ConsoleColor.Yellow);
+                                    $"CACHE: \r{CACHE.IS_VISIBLE}\n" +
+                                    $"\r{CACHE.IS_ICONIC}\n" +
+                                    $"\r0x{CACHE.STATE:X4}\n" +
+                                    $"TO:    \r{true}\n" +
+                                    $"\r{true}\n" +
+                                    $"\r0x{0:X4}\n" +
+                                    "模式：\r主动\n" +
+                                    "代码尚处实验阶段，相应调试信息予以保留...\r"),
+                                    ConsoleColor.Yellow);
                                 CACHE.IS_VISIBLE = true;
                                 CACHE.IS_ICONIC = true;
                                 CACHE.STATE = 0x0000;
@@ -616,18 +601,15 @@ namespace MHYLAUNCHER_GO.Plugins
                                 TraceExtensions.Print(TraceExtensions.FormatMessage(
                                     DateTime.Now,
                                     "临时数据（实验功能）",
-                                    20,
-                                    new string[8]
-                                    {
-                                        $"CACHE: {CACHE.IS_VISIBLE}",
-                                        $"#       {CACHE.IS_ICONIC}",
-                                        $"#       0x{CACHE.STATE:X4}",
-                                        $"TO:    {true}",
-                                        $"#       {false}",
-                                        $"#       0x{1:X4}",
-                                        "模式：主动",
-                                        "代码尚处实验阶段，相应调试信息予以保留..."
-                                    }), ConsoleColor.Yellow);
+                                    $"CACHE: \r{CACHE.IS_VISIBLE}\n" +
+                                    $"\r{CACHE.IS_ICONIC}\n" +
+                                    $"\r0x{CACHE.STATE:X4}\n" +
+                                    $"TO:    \r{true}\n" +
+                                    $"\r{false}\n" +
+                                    $"\r0x{0:X4}\n" +
+                                    "模式：\r主动\n" +
+                                    "代码尚处实验阶段，相应调试信息予以保留...\r"),
+                                    ConsoleColor.Yellow);
                                 CACHE.IS_VISIBLE = true;
                                 CACHE.IS_ICONIC = false;
                                 CACHE.STATE = 0x0001;
@@ -767,18 +749,15 @@ namespace MHYLAUNCHER_GO.Plugins
                 TraceExtensions.Print(TraceExtensions.FormatMessage(
                     DateTime.Now,
                     "临时数据（实验功能）",
-                    20,
-                    new string[8]
-                    {
-                        $"CACHE: {CACHE.IS_VISIBLE}",
-                        $"#       {CACHE.IS_ICONIC}",
-                        $"#       0x{CACHE.STATE:X4}",
-                        $"NOW:   {IsWindowVisible(HYP)}",
-                        $"#       {IsIconic(HYP)}",
-                        $"#       0x{p3:X4}",
-                        "模式：被动",
-                        "代码尚处实验阶段，相应调试信息予以保留..."
-                    }), ConsoleColor.Yellow);
+                    $"CACHE: \r{CACHE.IS_VISIBLE}\n" +
+                    $"\r{CACHE.IS_ICONIC}\n" +
+                    $"\r0x{CACHE.STATE:X4}\n" +
+                    $"NOW:   \r{IsWindowVisible(HYP)}\n" +
+                    $"\r{IsIconic(HYP)}\n" +
+                    $"\r0x{p3:X4}\n" +
+                    "模式：\r被动\n" +
+                    "代码尚处实验阶段，相应调试信息予以保留...\r"),
+                    ConsoleColor.Yellow);
                 CACHE.IS_VISIBLE = p1 != 0;
                 CACHE.IS_ICONIC = p2 != 0;
                 CACHE.STATE = p3;

@@ -171,16 +171,16 @@ namespace MHYLAUNCHER_GO.Functions
                         {
                             if (games[i_path] == null)
                             {
-                                std_false.Add($"进程名：{Path.GetFileName(infos.paths[i_path])}");
-                                std_false.Add($"#{(char)9492} 路径：{infos.paths[i_path]}");
+                                std_false.Add($"进程名：\r{Path.GetFileName(infos.paths[i_path])}");
+                                std_false.Add($"· 路径：\r{infos.paths[i_path]}");
                             }
                             else
                             {
                                 if (ts[i_path] == null)
                                 {
-                                    std_true.Add($"进程名：{Path.GetFileName(infos.paths[i_path])}");
-                                    std_true.Add($"#{(char)9500} 路径：{infos.paths[i_path]}");
-                                    std_true.Add($"#{(char)9492} 进程ID：{games[i_path].Id}");
+                                    std_true.Add($"进程名：\r{Path.GetFileName(infos.paths[i_path])}");
+                                    std_true.Add($"· 路径：\r{infos.paths[i_path]}");
+                                    std_true.Add($"· 进程ID：\r{games[i_path].Id}");
                                     int index = i_path;
                                     ts[index] = Task.Run(RunFunc); // 执行游戏进程处理相关操作
                                     int RunFunc()
@@ -273,9 +273,9 @@ namespace MHYLAUNCHER_GO.Functions
                                                             $"\\0x{"MHYLAUNCHER_GO".GetHashCode():X8}.MHYLG";
                                                         if (File.Exists(std))
                                                         {
-                                                            std_exp.Add("已执行CPU亲和性配置");
-                                                            std_exp.Add($"进程ID：0x{games[index].Id:X8}");
-                                                            std_exp.Add($"状态：跳过");
+                                                            std_exp.Add("操作：\r已执行CPU亲和性配置");
+                                                            std_exp.Add($"进程ID：\r0x{games[index].Id:X8}");
+                                                            std_exp.Add($"状态：\r跳过");
                                                         }
                                                         else
                                                         {
@@ -283,15 +283,15 @@ namespace MHYLAUNCHER_GO.Functions
                                                             {
                                                                 if (Load.SetProcess_Pro(games[index], ProcessPriorityClass.Normal, true))
                                                                 {
-                                                                    std_exp.Add("已执行CPU亲和性配置");
-                                                                    std_exp.Add($"进程ID：0x{games[index].Id:X8}");
-                                                                    std_exp.Add($"状态：成功");
+                                                                    std_exp.Add("操作：\r已执行CPU亲和性配置");
+                                                                    std_exp.Add($"进程ID：\r0x{games[index].Id:X8}");
+                                                                    std_exp.Add($"状态：\r成功");
                                                                 }
                                                                 else
                                                                 {
-                                                                    std_exp.Add("已执行CPU亲和性配置");
-                                                                    std_exp.Add($"进程ID：0x{games[index].Id:X8}");
-                                                                    std_exp.Add($"状态：失败");
+                                                                    std_exp.Add("操作：\r已执行CPU亲和性配置");
+                                                                    std_exp.Add($"进程ID：\r0x{games[index].Id:X8}");
+                                                                    std_exp.Add($"状态：\r失败");
                                                                     void SetFlag(int _pid, string _path)
                                                                     {
                                                                         Task.Run(() =>
@@ -320,17 +320,17 @@ namespace MHYLAUNCHER_GO.Functions
                                                             }
                                                             else
                                                             {
-                                                                std_exp.Add("已执行CPU亲和性配置");
-                                                                std_exp.Add($"进程ID：0x{games[index].Id:X8}");
-                                                                std_exp.Add($"状态：忽略");
+                                                                std_exp.Add("操作：\r已执行CPU亲和性配置");
+                                                                std_exp.Add($"进程ID：\r0x{games[index].Id:X8}");
+                                                                std_exp.Add($"状态：\r忽略");
                                                             }
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        std_exp.Add("已执行CPU亲和性配置");
-                                                        std_exp.Add($"进程ID：0x{games[index].Id:X8}");
-                                                        std_exp.Add($"状态：跳过(已配置)");
+                                                        std_exp.Add("操作：\r已执行CPU亲和性配置");
+                                                        std_exp.Add($"进程ID：\r0x{games[index].Id:X8}");
+                                                        std_exp.Add($"状态：\r跳过(已配置)");
                                                     }
                                                     // Experiment ... ⬆️
                                                     infos.Run(games[index], index, dwm);
@@ -348,32 +348,32 @@ namespace MHYLAUNCHER_GO.Functions
                                         games[index] = null;
                                         return 0;
                                     }
-                                    std_task.Add($"任务已启动: ID = {ts[index].Id}");
+                                    std_task.Add($"任务已启动: \rID = {ts[index].Id}");
                                     ts[index].ContinueWith(t =>
                                     {
                                         if (t.Status == TaskStatus.RanToCompletion && t.Result < 0)
                                         {
                                             List<string> logs = new List<string>
                                             {
-                                                $"任务ID：{t.Id}"
+                                                $"任务ID：\r{t.Id}"
                                             };
                                             switch (t.Result)
                                             {
                                                 case -1:
-                                                    logs.Add("错误原因：游戏进程已退出");
+                                                    logs.Add("错误原因：\r游戏进程已退出");
                                                     break;
                                                 case int.MinValue:
-                                                    logs.Add("错误原因：未能识别到游戏窗口");
+                                                    logs.Add("错误原因：\r未能识别到游戏窗口");
                                                     break;
                                                 default:
-                                                    logs.Add("错误原因：未知");
+                                                    logs.Add("错误原因：\r未知");
                                                     break;
                                             }
                                             TraceExtensions.Print(TraceExtensions.FormatMessage(
                                                 timepoint,
                                                 "任务执行错误",
-                                                12,
-                                                logs.ToArray()), ConsoleColor.Red);
+                                                string.Join("\n", logs)),
+                                                ConsoleColor.Red);
                                         }
                                         ts[index] = null;
                                         if (t.Status == TaskStatus.Faulted)
@@ -386,37 +386,37 @@ namespace MHYLAUNCHER_GO.Functions
                         }
                         if (std_false.Count > 0)
                         {
-                            std_false.Add($"状态：未捕获");
+                            std_false.Add($"状态：\r未捕获");
                             TraceExtensions.Print(TraceExtensions.FormatMessage(
                                 timepoint,
                                 "进程管理器",
-                                10,
-                                std_false.ToArray()), ConsoleColor.Gray);
+                                string.Join("\n", std_false)),
+                                ConsoleColor.Gray);
                         }
                         if (std_true.Count > 0)
                         {
-                            std_true.Add($"状态：已捕获");
+                            std_true.Add($"状态：\r已捕获");
                             TraceExtensions.Print(TraceExtensions.FormatMessage(
                                 timepoint,
                                 "进程管理器",
-                                10,
-                                std_true.ToArray()), ConsoleColor.Green);
+                                string.Join("\n", std_true)),
+                                ConsoleColor.Green);
                         }
                         if (std_task.Count > 0)
                         {
                             TraceExtensions.Print(TraceExtensions.FormatMessage(
                                 timepoint,
                                 "异步线程",
-                                8,
-                                std_task.ToArray()), ConsoleColor.Blue);
+                                string.Join("\n", std_task)),
+                                ConsoleColor.Blue);
                         }
                         if (std_exp.Count > 0)
                         {
                             TraceExtensions.Print(TraceExtensions.FormatMessage(
                                 timepoint,
                                 "EfficiencyMode模块",
-                                18,
-                                std_exp.ToArray()), ConsoleColor.Blue);
+                                string.Join("\n", std_exp)),
+                                ConsoleColor.Yellow);
                         }
                     }
                     timer.WaitOne(TimeSpan.FromSeconds(1), false);

@@ -31,7 +31,7 @@
           ClipToBounds="True">
         <Image Source="/MainFrame/BG.png"
                Stretch="UniformToFill"
-               Opacity="0.2"
+               Opacity="0.4"
                Visibility="Collapsed"
                RenderOptions.BitmapScalingMode="HighQuality"
                x:Name="BGIMAGE">
@@ -41,7 +41,7 @@
                       LoadedBehavior="Manual"
                       UnloadedBehavior="Close"
                       Volume="0"
-                      Opacity="0.5"
+                      Opacity="0.6"
                       Visibility="Collapsed"
                       RenderOptions.BitmapScalingMode="HighQuality"
                       x:Name="BGVIDEO">
@@ -56,7 +56,7 @@
                 x:Name="CLOSE"
                 Canvas.ZIndex="2">
             <Border.Background>
-                <SolidColorBrush x:Name="CLOSEBackground" Color="#CC1E2025"/>
+                <SolidColorBrush x:Name="CLOSEBackground" Color="#B21E2025"/>
             </Border.Background>
             <Border.Triggers>
                 <EventTrigger RoutedEvent="Mouse.MouseEnter">
@@ -65,7 +65,7 @@
                             <ColorAnimation 
                                 Storyboard.TargetName="CLOSEBackground"
                                 Storyboard.TargetProperty="Color"
-                                To="#CCFE6952"
+                                To="#B2FE6952"
                                 Duration="0:0:0.1">
                                 <ColorAnimation.EasingFunction>
                                     <SineEase EasingMode="EaseInOut"/>
@@ -94,7 +94,7 @@
                             <ColorAnimation 
                                 Storyboard.TargetName="CLOSEBackground"
                                 Storyboard.TargetProperty="Color"
-                                To="#CC1E2025"
+                                To="#B21E2025"
                                 Duration="0:0:0.1">
                                 <ColorAnimation.EasingFunction>
                                     <SineEase EasingMode="EaseInOut"/>
@@ -125,7 +125,7 @@
                 <DropShadowEffect BlurRadius="10"
                                   Color="#FF000000"
                                   Direction="90"
-                                  Opacity="0.8"
+                                  Opacity="1"
                                   ShadowDepth="0"/>
             </Border.Effect>
         </Border>
@@ -139,7 +139,7 @@
                 x:Name="RUN"
                 Canvas.ZIndex="2">
             <Border.Background>
-                <SolidColorBrush x:Name="RUNBackground" Color="#CC1E2025"/>
+                <SolidColorBrush x:Name="RUNBackground" Color="#B21E2025"/>
             </Border.Background>
             <Border.Triggers>
                 <EventTrigger RoutedEvent="Mouse.MouseEnter">
@@ -148,7 +148,7 @@
                             <ColorAnimation 
                                 Storyboard.TargetName="RUNBackground"
                                 Storyboard.TargetProperty="Color"
-                                To="#CC4BD37B"
+                                To="#B24BD37B"
                                 Duration="0:0:0.1">
                                 <ColorAnimation.EasingFunction>
                                     <SineEase EasingMode="EaseInOut"/>
@@ -177,7 +177,7 @@
                             <ColorAnimation 
                                 Storyboard.TargetName="RUNBackground"
                                 Storyboard.TargetProperty="Color"
-                                To="#CC1E2025"
+                                To="#B21E2025"
                                 Duration="0:0:0.1">
                                 <ColorAnimation.EasingFunction>
                                     <SineEase EasingMode="EaseInOut"/>
@@ -208,7 +208,7 @@
                 <DropShadowEffect BlurRadius="10"
                                   Color="#FF000000"
                                   Direction="90"
-                                  Opacity="0.8"
+                                  Opacity="1"
                                   ShadowDepth="0"/>
             </Border.Effect>
         </Border>
@@ -260,7 +260,7 @@
                 VerticalAlignment="Top"
                 Margin="10,10,68,0"
                 CornerRadius="5"
-                Background="#CC1E2025"
+                Background="#B21E2025"
                 x:Name="TITLE"
                 Canvas.ZIndex="2">
             <Grid>
@@ -276,7 +276,7 @@
                                Background="#00000000"
                                Foreground="#FF8D8E90"
                                FontFamily="GiteeGit, Consolas, Microsoft YaHei"
-                               FontSize="14"
+                               FontSize="12"
                                FontWeight="Regular"
                                TextAlignment="Center"
                                Text="V2"
@@ -302,7 +302,7 @@
                 <DropShadowEffect BlurRadius="10"
                                   Color="#FF000000"
                                   Direction="90"
-                                  Opacity="0.8"
+                                  Opacity="1"
                                   ShadowDepth="0"/>
             </Border.Effect>
         </Border>
@@ -339,7 +339,7 @@
         </Grid>
         <Grid HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
-              Margin="10,44,84,15"
+              Margin="5,39,79,10"
               Background="#00000000"
               ClipToBounds="True"
               x:Name="LOGPOOL"
@@ -357,14 +357,14 @@
                        LineStackingStrategy="BlockLineHeight"
                        SnapsToDevicePixels="True"
                        UseLayoutRounding="True"
-                       Margin="3,0,0,0"
+                       Margin="8,5,5,5"
                        x:Name="LOG">
                 <!--<LineBreak/>
                 <Run Text="MHYLAUNCHER_GO" Foreground="#FF8D8E90"/>
                 <LineBreak/>
                 <Run Text="程序正在自检" Foreground="#FF8D8E90"/>-->
                 <TextBlock.Effect>
-                    <DropShadowEffect BlurRadius="5"
+                    <DropShadowEffect BlurRadius="15"
                                       Color="#FF000000"
                                       Direction="90"
                                       Opacity="1"

@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
+using System.Windows;
 using static MHYLAUNCHER_GO.Functions.Win32;
 
 namespace MHYLAUNCHER_GO.Functions
@@ -141,8 +141,8 @@ namespace MHYLAUNCHER_GO.Functions
                         "控制台校验失败，原因未知，调用Console相关函数时运行时抛出异常：" +
                         $"\n\n{exp.Message}\n{exp.GetType()}\n{exp.StackTrace}",
                         "控制台校验出现异常...",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                        MessageBoxButton.OK, MessageBoxImage.Error,
+                        MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 }
             }
             // 绑定自释放逻辑
@@ -211,7 +211,7 @@ namespace MHYLAUNCHER_GO.Functions
             if (GetClientRect(consolehwnd, out RECT lpRect) && style != 0L && exstyle != 0L)
             {
                 SetWindowLongPtr(GetConsoleWindow(), GWL_STYLE, style | WS_CLIPCHILDREN & ~WS_CLIPSIBLINGS);
-                SetWindowLongPtr(GetConsoleWindow(), GWL_EXSTYLE, exstyle | WS_EX_COMPOSITED);
+                //SetWindowLongPtr(GetConsoleWindow(), GWL_EXSTYLE, exstyle | WS_EX_COMPOSITED); // 会导致闪烁，不要使用
                 if (CCS)
                 {
                     TraceTitle tt = new TraceTitle(consolehwnd, lpRect.ToRectangle().Width, _CCS)

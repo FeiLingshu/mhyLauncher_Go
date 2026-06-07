@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
 using BuildinMD5 = System.Security.Cryptography.MD5;
 
 namespace MHYLAUNCHER_GO.Functions.Font
@@ -62,9 +62,11 @@ namespace MHYLAUNCHER_GO.Functions.Font
                     var result = MessageBox.Show(
                         "字体尚未安装，是否从本地文件安装？\nMD5校验值：4ecb7de3a608c15612509194d11f99cb\n\nCopyright 2026 By FeiLingshu",
                         "Font Installer",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Information);
-                    if (result == DialogResult.Yes)
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Information,
+                        MessageBoxResult.No,
+                        MessageBoxOptions.DefaultDesktopOnly);
+                    if (result == MessageBoxResult.Yes)
                     {
                         if (InstallFont(filepath) == 0)
                         {
