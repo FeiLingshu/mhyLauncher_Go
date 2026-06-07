@@ -309,6 +309,8 @@ namespace MHYLAUNCHER_GO
                     }
                 }
             }
+            // 载入控制台数据缓存
+            ConsoleCharLength.LoadResource();
             // 检测并尝试安装本地字体
             FontInstall.Exists = FontInstall.CheckFont(PE);
             // 初始化局部变量
@@ -560,14 +562,11 @@ namespace MHYLAUNCHER_GO
                             TraceExtensions.Print(TraceExtensions.FormatMessage(
                                 DateTime.Now,
                                 "窗口管理器",
-                                10,
-                                new string[2]
-                                {
-                                    $"窗口位置锁定模块",
-                                    $"状态：已激活"
-                                }), ConsoleColor.Green);
+                                $"事件源：\r窗口位置锁定模块\n" +
+                                $"状态：\r已激活"),
+                                ConsoleColor.Green);
                             movestate = false;
-                        };
+                        }
                     }
                     else
                     {
@@ -576,12 +575,9 @@ namespace MHYLAUNCHER_GO
                         TraceExtensions.Print(TraceExtensions.FormatMessage(
                             DateTime.Now,
                             "窗口管理器",
-                            10,
-                            new string[2]
-                            {
-                                $"窗口位置锁定模块",
-                                $"状态：未激活"
-                            }), ConsoleColor.Gray);
+                            $"事件源：\r窗口位置锁定模块\n" +
+                            $"状态：\r未激活"),
+                            ConsoleColor.Red);
                         movestate = true;
                     }
                 }
@@ -624,17 +620,14 @@ namespace MHYLAUNCHER_GO
                             TraceExtensions.Print(TraceExtensions.FormatMessage(
                                 DateTime.Now,
                                 "窗口管理器",
-                                10,
-                                new string[7]
-                                {
-                                $"窗口位置/大小变化事件",
-                                $"类型：位置{(size ? string.Empty : " + 大小")}",
-                                $"Bound：X：{checkout_r.Left,4} -> {rectangle.X,4}",
-                                $"#       Y：{checkout_r.Top,4} -> {rectangle.Y,4}",
-                                $"#       Width： {checkout_r.Width,4} {(size ? "(已忽略)" : $"-> {rectangle.Width,4}")}",
-                                $"#       Height：{checkout_r.Height,4} {(size ? "(已忽略)" : $"-> {rectangle.Height,4}")}",
-                                $"强制更新窗口框架：{forceupdate}"
-                                }), ConsoleColor.Blue);
+                                $"事件源：\r窗口位置/大小变化事件\n" +
+                                $"类型：\r位置{(size ? string.Empty : " + 大小")}\n" +
+                                $"Bound：\rX：{checkout_r.Left,4} -> {rectangle.X,4}\n" +
+                                $"\rY：{checkout_r.Top,4} -> {rectangle.Y,4}\n" +
+                                $"\rWidth： {checkout_r.Width,4} {(size ? "(已忽略)" : $"-> {rectangle.Width,4}")}\n" +
+                                $"\rHeight：{checkout_r.Height,4} {(size ? "(已忽略)" : $"-> {rectangle.Height,4}")}\n" +
+                                $"强制更新窗口框架：\r{forceupdate}"),
+                                ConsoleColor.Blue);
                             return true;
                     }
                     return false;
@@ -696,13 +689,10 @@ namespace MHYLAUNCHER_GO
                             TraceExtensions.Print(TraceExtensions.FormatMessage(
                                 DateTime.Now,
                                 "窗口管理器",
-                                10,
-                                new string[3]
-                                {
-                                    $"窗口标题变化事件",
-                                    $"原始：{originaltitle}",
-                                    $"当前：{originaltitle}{addupstd}"
-                                }), ConsoleColor.Yellow);
+                                $"事件源：\r窗口标题变化事件\n" +
+                                $"原始：\r{originaltitle}\n" +
+                                $"当前：\r{originaltitle}{addupstd}"),
+                                ConsoleColor.Yellow);
                             return true;
                         }
                         return false;
@@ -798,21 +788,21 @@ namespace MHYLAUNCHER_GO
             (Rectangle, Size, Padding) Param = (Rectangle.Empty, Size.Empty, Padding.Empty); // 准备返回值
             List<string> log = new List<string> // 准备日志字符串
             {
-                "窗口框架检测模块",
-                $"目标显示器：{main_screen.DeviceName}"
+                "事件源：\r窗口框架检测模块",
+                $"目标显示器：\r{main_screen.DeviceName}"
             };
             bool screen_check = cache_screen.DeviceName == main_screen.DeviceName // 按需执行运算操作
                 && cache_screen.Bounds == main_screen.Bounds
                 && cache_screen.WorkingArea == main_screen.WorkingArea;
             if (screen_check && cache_csize != Size.Empty && cache_cpad == client_pad)
             {
-                log.Add("是否从缓存中读取：true");
+                log.Add("是否从缓存中读取：\rtrue");
                 Param.Item2 = cache_csize;
                 Param.Item3 = cache_cpad;
             }
             else
             {
-                log.Add("是否从缓存中读取：false");
+                log.Add("是否从缓存中读取：\rfalse");
                 Size targatesize = Size.Empty; // 对两种预置显示模式进行匹配
                 if (mode == BIN.MODE.PC) // 21:9
                 {
@@ -939,21 +929,21 @@ namespace MHYLAUNCHER_GO
             Param.Item1 = new Rectangle(lction_p, Param.Item2 + cache_cpad.Size);
 
             // 打印日志
-            log.Insert(2, $"窗口目标位置：X：{Param.Item1.Left,4}");
-            log.Insert(3, $"#              Y：{Param.Item1.Top,4}");
-            log.Insert(4, $"#              Width： {Param.Item1.Width,4}");
-            log.Insert(5, $"#              Height：{Param.Item1.Height,4}");
-            log.Insert(6, $"窗口客户区大小：Width： {Param.Item2.Width,4}");
-            log.Insert(7, $"#                Height：{Param.Item2.Height,4}");
-            log.Insert(8, $"窗口框架大小：Top：   {Param.Item3.Top,4}");
-            log.Insert(9, $"#              Bottom：{Param.Item3.Bottom,4}");
-            log.Insert(10, $"#              Left：  {Param.Item3.Left,4}");
-            log.Insert(11, $"#              Right： {Param.Item3.Right,4}");
+            log.Insert(2, $"窗口目标位置：\rX：{Param.Item1.Left,4}");
+            log.Insert(3, $"\rY：{Param.Item1.Top,4}");
+            log.Insert(4, $"\rWidth： {Param.Item1.Width,4}");
+            log.Insert(5, $"\rHeight：{Param.Item1.Height,4}");
+            log.Insert(6, $"窗口客户区大小：\rWidth： {Param.Item2.Width,4}");
+            log.Insert(7, $"\rHeight：{Param.Item2.Height,4}");
+            log.Insert(8, $"窗口框架大小：\rTop：   {Param.Item3.Top,4}");
+            log.Insert(9, $"\rBottom：{Param.Item3.Bottom,4}");
+            log.Insert(10, $"\rLeft：  {Param.Item3.Left,4}");
+            log.Insert(11, $"\rRight： {Param.Item3.Right,4}");
             TraceExtensions.Print(TraceExtensions.FormatMessage(
                 DateTime.Now,
                 "窗口管理器",
-                10,
-                log.ToArray()), ConsoleColor.Gray);
+                string.Join("\n", log)),
+                ConsoleColor.Blue);
             return Param;
         }
 
