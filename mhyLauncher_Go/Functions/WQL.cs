@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Management;
+using System.Text;
 
 namespace MHYLAUNCHER_GO.Functions
 {
@@ -49,7 +50,7 @@ namespace MHYLAUNCHER_GO.Functions
             var whereClause = string.Join(" OR ", conditions);
             var query = $"SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE {whereClause}";
             const int SafeThreshold = 8192;
-            if (query.Length > SafeThreshold)
+            if (Encoding.Unicode.GetByteCount(query) > SafeThreshold)
             {
                 return false;
             }
