@@ -1746,9 +1746,9 @@ namespace MHYLAUNCHER_GO.Functions
                 {
                     _totlelen += _len;
                     charcount++;
-                    if (_len >= off)
+                    if (_totlelen >= off)
                     {
-                        cache = _len - off;
+                        cache = _totlelen - off;
                         break;
                     }
                 }

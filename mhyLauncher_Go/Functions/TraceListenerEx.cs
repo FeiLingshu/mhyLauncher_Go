@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using static MHYLAUNCHER_GO.Functions.Win32;
 using Screen = System.Windows.Forms.Screen;
@@ -122,15 +123,44 @@ namespace MHYLAUNCHER_GO.Functions
                         int dpiX = GetDeviceCaps(hdc, LOGPIXELSX);
                         int dpiY = GetDeviceCaps(hdc, LOGPIXELSY);
                         ReleaseDC(IntPtr.Zero, hdc);
+                        int[] screenarea = new int[2];
+                        bool[] screenstatus = new bool[2];
                         foreach (var screen in screens)
                         {
-                            widths.Add(screen.WorkingArea.Width);
-                            heights.Add(screen.WorkingArea.Height);
+                            screenarea[0] = screen.Bounds.Width;
+                            screenarea[1] = screen.Bounds.Height;
+                            if (screenarea.Max() >= 800 && screenarea.Min() >= 600)
+                            {
+                                widths.Add(screen.WorkingArea.Width);
+                                heights.Add(screen.WorkingArea.Height);
+                            }
+                            else
+                            {
+                                screenstatus[0] |= true;
+                            }
+                        }
+                        if (widths.Count == 0 || heights.Count == 0)
+                        {
+                            throw new ArgumentException("无法识别到有效的屏幕空间。");
                         }
                         if (GetProcAddress(GetModuleHandle("shcore.dll"), "GetDpiForMonitor") == IntPtr.Zero)
                         {
-                            dpis.Add((uint)dpiX);
-                            dpis.Add((uint)dpiY);
+                            if (dpiX >= 72)
+                            {
+                                dpis.Add((uint)dpiX);
+                            }
+                            else
+                            {
+                                screenstatus[1] |= true;
+                            }
+                            if (dpiY >= 72)
+                            {
+                                dpis.Add((uint)dpiY);
+                            }
+                            else
+                            {
+                                screenstatus[1] |= true;
+                            }
                         }
                         else
                         {
@@ -139,12 +169,30 @@ namespace MHYLAUNCHER_GO.Functions
                                 int _result = GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, out uint _dpiX, out uint _dpiY);
                                 if (_result == 0)
                                 {
-                                    dpis.Add(_dpiX);
-                                    dpis.Add(_dpiY);
+                                    if (_dpiX >= 72)
+                                    {
+                                        dpis.Add(_dpiX);
+                                    }
+                                    else
+                                    {
+                                        screenstatus[1] |= true;
+                                    }
+                                    if (_dpiY >= 72)
+                                    {
+                                        dpis.Add(_dpiY);
+                                    }
+                                    else
+                                    {
+                                        screenstatus[1] |= true;
+                                    }
                                 }
                                 return true;
                             }
                             EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnum, IntPtr.Zero);
+                        }
+                        if (dpis.Count == 0)
+                        {
+                            throw new ArgumentException("无法识别到有效的屏幕空间。");
                         }
                         short widthlimit = (short)widths.Min();
                         short heightlimit = (short)heights.Min();
@@ -198,7 +246,10 @@ namespace MHYLAUNCHER_GO.Functions
                         }
                         single.Width = (int)Math.Ceiling(_info.dwFontSize.X / (double)basedpi * (double)dpilimit);
                         single.Height = (int)Math.Ceiling(_info.dwFontSize.Y / (double)basedpi * (double)dpilimit);
-                        // Debug.Print($"{widthlimit},{heightlimit} | {offset} | {single} | {basedpi} | {dpilimit}"); // 测试用代码
+                        if (Debugger.IsAttached) // 测试用代码
+                        {
+                            Debug.Print($"{widthlimit},{heightlimit} | {offset} | {single} | {basedpi} | {dpilimit}");
+                        }
                         // 计算合理窗口大小
                         short cwidth = (short)Math.Floor((widthlimit - offset.Width) / (double)single.Width);
                         short cheight = (short)Math.Floor((heightlimit - offset.Height) / (double)single.Height);
@@ -221,6 +272,22 @@ namespace MHYLAUNCHER_GO.Functions
                         SetConsoleWindowInfo(hConsole, true, ref CRECT);
                         BSIZE.X = cwidth;
                         SetConsoleScreenBufferSize(hConsole, BSIZE);
+                        // 适时弹出提示信息
+                        if (screenstatus[0] || screenstatus[1])
+                        {
+                            string msg = "当前系统中部分显示器存在异常参数：" +
+                                $"{(screenstatus[0] ? "\n- 分辨率" : string.Empty)}" +
+                                $"{(screenstatus[1] ? "\n- DPI" : string.Empty)}" +
+                                "\n可能导致Trace窗口在多显示器间移动时出现异常";
+                            Task.Run(() =>
+                            {
+                                MessageBox.Show(
+                                    msg,
+                                    "Trace组件提示...",
+                                    MessageBoxButton.OK, MessageBoxImage.Warning,
+                                    MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                            });
+                        }
                     }
                 }
                 catch (Exception exp)
