@@ -316,8 +316,6 @@ namespace MHYLAUNCHER_GO
                     }
                 }
             }
-            // 载入控制台数据缓存
-            ConsoleCharLength.LoadResource();
             // 检测并尝试安装本地字体
             FontInstall.Exists = FontInstall.CheckFont(PE);
             // 初始化局部变量
@@ -362,30 +360,37 @@ namespace MHYLAUNCHER_GO
                 // 获取更新(异步)
                 hello.Log("获取更新(异步)");
                 time = TimeSpan.FromMilliseconds(500);
-                hello.PreStep(0.2, time);
+                hello.PreStep(500D / 5500D, time);
                 hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 加载必要资源
                 hello.Log("加载必要资源");
                 time = TimeSpan.FromMilliseconds(1000);
-                hello.PreStep(0.4, time);
+                hello.PreStep(1500D / 5500D, time);
                 BugFix.Initialize();
+                ConsoleCharLength.LoadResource();
                 hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 识别运行环境
                 hello.Log("识别运行环境");
                 time = TimeSpan.FromMilliseconds(2000);
-                hello.PreStep(0.6, time);
+                hello.PreStep(3500D / 5500D, time);
                 Load.CoreType = Load.GetCoreMap();
+                hello.StepSignal.WaitOne(time.Add(wait), false);
+                // 连接WMI服务
+                hello.Log("连接WMI服务");
+                time = TimeSpan.FromMilliseconds(500);
+                hello.PreStep(4000D / 5500D, time);
+                WQL.Connect();
                 hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 读取用户配置文件
                 hello.Log("挂载用户配置文件");
                 time = TimeSpan.FromMilliseconds(1000);
-                hello.PreStep(0.8, time);
+                hello.PreStep(5000D / 5500D, time);
                 binstate = BIN.Check() && BIN.GetPaths();
                 hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 识别启动器进程
                 hello.Log("预读游戏启动器进程");
                 time = TimeSpan.FromMilliseconds(500);
-                hello.PreStep(1.0, time);
+                hello.PreStep(5500D / 5500D, time);
                 process = mhyLauncher();
                 hello.StepSignal.WaitOne(time.Add(wait), false);
                 // 等待用户输入
