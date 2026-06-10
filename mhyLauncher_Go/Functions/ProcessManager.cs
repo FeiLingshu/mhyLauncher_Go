@@ -398,6 +398,14 @@ namespace MHYLAUNCHER_GO.Functions
                                                         std_exp.Add($"进程ID：\r0x{games[index].Id:X8}");
                                                         std_exp.Add($"状态：\r跳过(已配置)");
                                                     }
+                                                    if (std_exp.Count > 0)
+                                                    {
+                                                        TraceExtensions.Print(TraceExtensions.FormatMessage(
+                                                            timepoint,
+                                                            "EfficiencyMode模块",
+                                                            string.Join("\n", std_exp)),
+                                                            ConsoleColor.Yellow);
+                                                    }
                                                     // Experiment ... ⬆️
                                                     infos.Run(games[index], index, dwm);
                                                 }
@@ -475,14 +483,6 @@ namespace MHYLAUNCHER_GO.Functions
                                 "异步线程",
                                 string.Join("\n", std_task)),
                                 ConsoleColor.Blue);
-                        }
-                        if (std_exp.Count > 0)
-                        {
-                            TraceExtensions.Print(TraceExtensions.FormatMessage(
-                                timepoint,
-                                "EfficiencyMode模块",
-                                string.Join("\n", std_exp)),
-                                ConsoleColor.Yellow);
                         }
                     }
                     timer.WaitOne(TimeSpan.FromSeconds(1), false);
