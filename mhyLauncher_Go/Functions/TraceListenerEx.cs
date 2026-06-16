@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 using static MHYLAUNCHER_GO.Functions.Win32;
 using Screen = System.Windows.Forms.Screen;
 using Size = System.Drawing.Size;
@@ -224,16 +225,6 @@ namespace MHYLAUNCHER_GO.Functions
                         } while (true);
                         Size offset = window_s - client_s;
                         // 获取控制台字符单位
-                        uint basedpi = 0;
-                        if (GetProcAddress(GetModuleHandle("shcore.dll"), "GetDpiForWindow") == IntPtr.Zero)
-                        {
-                            basedpi = new uint[] { (uint)dpiX, (uint)dpiY }.Max();
-                        }
-                        else
-                        {
-                            GetDpiForWindow(consolehwnd, out uint bdpiX, out uint bdpiY);
-                            basedpi = new uint[] { bdpiX, bdpiY }.Max();
-                        }
                         Size single = Size.Empty;
                         CONSOLE_FONT_INFO_EX _info = new CONSOLE_FONT_INFO_EX
                         {
@@ -244,11 +235,11 @@ namespace MHYLAUNCHER_GO.Functions
                         {
                             throw new Win32Exception("无法获取控制台属性。");
                         }
-                        single.Width = (int)Math.Ceiling(_info.dwFontSize.X / (double)basedpi * (double)dpilimit);
-                        single.Height = (int)Math.Ceiling(_info.dwFontSize.Y / (double)basedpi * (double)dpilimit);
+                        single.Width = (int)Math.Ceiling(_info.dwFontSize.X / 96D * (double)dpilimit);
+                        single.Height = (int)Math.Ceiling(_info.dwFontSize.Y / 96D * (double)dpilimit);
                         if (Debugger.IsAttached) // 测试用代码
                         {
-                            Debug.Print($"{widthlimit},{heightlimit} | {offset} | {single} | {basedpi} | {dpilimit}");
+                            Debug.Print($"{widthlimit},{heightlimit} | {offset} | {single} | {dpilimit}");
                         }
                         // 计算合理窗口大小
                         short cwidth = (short)Math.Floor((widthlimit - offset.Width) / (double)single.Width);
@@ -269,8 +260,11 @@ namespace MHYLAUNCHER_GO.Functions
                             Bottom = (short)(cheight - 1)
                         };
                         SetConsoleScreenBufferSize(hConsole, BSIZE);
-                        SetConsoleWindowInfo(hConsole, true, ref CRECT);
                         BSIZE.X = cwidth;
+                        if (!SetConsoleWindowInfo(hConsole, true, ref CRECT))
+                        {
+                            BSIZE.X = (short)Console.WindowWidth;
+                        }
                         SetConsoleScreenBufferSize(hConsole, BSIZE);
                         // 适时弹出提示信息
                         if (screenstatus[0] || screenstatus[1])
