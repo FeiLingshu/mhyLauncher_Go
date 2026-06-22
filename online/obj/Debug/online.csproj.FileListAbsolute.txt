@@ -1,0 +1,9 @@
+C:\FeiLingshu\Projects\mhyLauncher_Go_NoWMI\ONLINE\online\online\bin\Debug\online.exe.config
+C:\FeiLingshu\Projects\mhyLauncher_Go_NoWMI\ONLINE\online\online\bin\Debug\online.exe
+C:\FeiLingshu\Projects\mhyLauncher_Go_NoWMI\ONLINE\online\online\bin\Debug\online.pdb
+C:\FeiLingshu\Projects\mhyLauncher_Go_NoWMI\ONLINE\online\online\obj\Debug\online.csproj.AssemblyReference.cache
+C:\FeiLingshu\Projects\mhyLauncher_Go_NoWMI\ONLINE\online\online\obj\Debug\online.UI.Download.resources
+C:\FeiLingshu\Projects\mhyLauncher_Go_NoWMI\ONLINE\online\online\obj\Debug\online.csproj.GenerateResource.cache
+C:\FeiLingshu\Projects\mhyLauncher_Go_NoWMI\ONLINE\online\online\obj\Debug\online.csproj.CoreCompileInputs.cache
+C:\FeiLingshu\Projects\mhyLauncher_Go_NoWMI\ONLINE\online\online\obj\Debug\online.exe
+C:\FeiLingshu\Projects\mhyLauncher_Go_NoWMI\ONLINE\online\online\obj\Debug\online.pdb
