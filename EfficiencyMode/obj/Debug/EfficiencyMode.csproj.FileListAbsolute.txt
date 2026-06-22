@@ -1,6 +1,0 @@
-D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\bin\Debug\EfficiencyMode.dll
-D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\bin\Debug\EfficiencyMode.pdb
-D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\obj\Debug\EfficiencyMode.csproj.AssemblyReference.cache
-D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\obj\Debug\EfficiencyMode.csproj.CoreCompileInputs.cache
-D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\obj\Debug\EfficiencyMode.dll
-D:\编程文件\临时测试项目\EfficiencyMode\EfficiencyMode\EfficiencyMode\obj\Debug\EfficiencyMode.pdb
