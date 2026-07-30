@@ -21,9 +21,14 @@ namespace online.UI
             this.radioButton_otf.Click += RadioButton_Click;
             this.button_downlaod.Click += (sender, e) =>
             {
-                if (radioButton_dll.Checked || radioButton_mp4.Checked || radioButton_otf.Checked)
+                if (radioButton_dll.Checked || radioButton_mp4.Checked || radioButton_otf.Checked || checkBox_self.Checked)
                 {
                     this.button_downlaod.Enabled = false;
+                    this.button_downlaod.Text = "正在下载";
+                    Color bcolor = this.button_downlaod.BackColor;
+                    Color fcolor = this.button_downlaod.ForeColor;
+                    this.button_downlaod.BackColor = Color.FromArgb(0xFF, 0x30, 0x30, 0x30);
+                    this.button_downlaod.ForeColor = Color.FromArgb(0xFF, 0x80, 0x80, 0x80);
                     bool s = checkBox_source.Checked;
                     bool f1 = radioButton_dll.Checked;
                     bool f2 = radioButton_mp4.Checked;
@@ -34,6 +39,9 @@ namespace online.UI
                         function(this, s, f1, f2, f3, fs);
                         this.Invoke(new Action(() =>
                         {
+                            this.button_downlaod.Text = "开始下载";
+                            this.button_downlaod.BackColor = bcolor;
+                            this.button_downlaod.ForeColor = fcolor;
                             this.button_downlaod.Enabled = true;
                         }));
                     });
